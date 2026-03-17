@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mimir</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- Auth Screen -->
+<div id="auth-screen" style="display:none">
+  <div class="auth-container">
+    <h1>Mimir<span>Brain-first AI</span></h1>
+    <div id="auth-error" class="auth-error" style="display:none"></div>
+    <form id="auth-form">
+      <input id="auth-email" type="email" placeholder="Email" required />
+      <input id="auth-password" type="password" placeholder="Password (min 8 chars)" required minlength="8" />
+      <input id="auth-name" type="text" placeholder="Display name (optional)" style="display:none" />
+      <button type="submit" id="auth-submit">Login</button>
+      <p class="auth-toggle">
+        <span id="auth-toggle-text">Don't have an account?</span>
+        <a href="#" id="auth-toggle-link">Register</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard-screen" style="display:none">
+  <div class="topbar">
+    <h1>Mimir<span>Brain-first AI</span></h1>
+    <div class="stats">
+      <div><div class="stat-val beliefs" id="s-beliefs">0</div><div class="stat-lbl">Beliefs</div></div>
+      <div><div class="stat-val clusters" id="s-clusters">0</div><div class="stat-lbl">SEC Clusters</div></div>
+      <div><div class="stat-val goals" id="s-goals">0</div><div class="stat-lbl">Goals</div></div>
+      <div><div class="stat-val" id="s-cycle">0</div><div class="stat-lbl">Cycle</div></div>
+      <div><div class="stat-val cost" id="s-cost">$0</div><div class="stat-lbl">Cost</div></div>
+    </div>
+    <div class="user-info">
+      <span id="user-display-name"></span>
+      <span id="user-plan" class="plan-badge"></span>
+      <button id="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel" id="graph-panel">
+      <div class="panel-title">Belief Graph</div>
+      <svg id="graph-svg"></svg>
+    </div>
+
+    <div class="panel" id="sec-panel">
+      <div class="panel-title">SEC Matrix (C values)</div>
+      <canvas id="sec-chart"></canvas>
+    </div>
+
+    <div class="panel" id="chat-panel">
+      <div class="panel-title">Chat</div>
+      <div id="chat-messages"></div>
+      <div id="chat-input-wrap">
+        <input id="chat-input" placeholder="Ask Mimir..." />
+        <button id="chat-send">Send</button>
+      </div>
+    </div>
+
+    <div class="panel" id="goals-panel">
+      <div class="panel-title">Goals</div>
+      <div id="goals-list"></div>
+      <div id="add-goal-form">
+        <input id="new-goal-input" placeholder="New goal..." />
+        <button onclick="addGoal()">Add</button>
+      </div>
+    </div>
+
+    <div class="panel" id="log-panel">
+      <div class="panel-title">Cycle Log</div>
+      <div id="log-list"></div>
+    </div>
+  </div>
+
+  <div id="detail-overlay">
+    <span id="detail-close" onclick="closeDetail()">&times;</span>
+    <div id="detail-content"></div>
+  </div>
+
+  <div id="notifications"></div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

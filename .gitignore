@@ -1,0 +1,23 @@
+# Core research (proprietary - not open-sourced)
+brain/sec_matrix.py
+brain/belief_graph.py
+
+# Data
+data/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# State files
+mimir_state.json
+*.db
+
+# Secrets
+.env
+config.json
+
+# IDE
+.vscode/
+.idea/
+*.swp

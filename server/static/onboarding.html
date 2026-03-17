@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mimir - Setup</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="onboarding-container">
+  <h1>Mimir<span>Setup Your Brain</span></h1>
+  <p class="onboarding-subtitle">Choose a template or create custom seed beliefs to get started.</p>
+
+  <div id="onboarding-error" class="auth-error" style="display:none"></div>
+
+  <!-- Step 1: Template selection -->
+  <div id="step-templates">
+    <h2>1. Choose a Template</h2>
+    <div id="template-grid" class="template-grid"></div>
+  </div>
+
+  <!-- Step 2: Custom beliefs (shown when custom is selected or to add more) -->
+  <div id="step-beliefs" style="display:none">
+    <h2>2. Seed Beliefs</h2>
+    <p class="onboarding-hint">These are the starting knowledge for your Brain. Add at least one.</p>
+    <div id="beliefs-list"></div>
+    <div class="add-belief-form">
+      <input id="new-belief-stmt" placeholder="Statement (e.g., 'AI will transform healthcare')" />
+      <input id="new-belief-tags" placeholder="Tags (comma-separated, e.g., ai, health)" />
+      <input id="new-belief-conf" type="number" min="0" max="1" step="0.1" value="0.7" placeholder="Confidence" />
+      <button onclick="addSeedBelief()">Add Belief</button>
+    </div>
+  </div>
+
+  <!-- Step 3: API Keys (optional) -->
+  <div id="step-keys" style="display:none">
+    <h2>3. API Keys (Optional)</h2>
+    <p class="onboarding-hint">Provide your own keys for better performance, or use shared defaults.</p>
+    <div class="key-form">
+      <label>DeepSeek API Key</label>
+      <input id="onb-llm-key" type="password" placeholder="sk-..." />
+      <label>Brave Search API Key</label>
+      <input id="onb-brave-key" type="password" placeholder="BSA..." />
+    </div>
+  </div>
+
+  <!-- Launch button -->
+  <div id="step-launch" style="display:none">
+    <button id="launch-btn" class="launch-btn" onclick="launchMimir()">Start Mimir</button>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+<script>
+// Onboarding-specific logic
+let selectedTemplate = null;
+let customBeliefs = [];
+
+async function loadTemplates() {
+  const data = await api('/api/onboarding/templates');
+  const grid = document.getElementById('template-grid');
+  grid.innerHTML = '';
+
+  for (const [key, t] of Object.entries(data.templates)) {
+    const card = document.createElement('div');
+    card.className = 'template-card';
+    card.dataset.key = key;
+    card.innerHTML = `
+      <h3>${esc(t.name)}</h3>
+      <p>${esc(t.description)}</p>
+      <span class="belief-count">${t.belief_count} beliefs</span>
+    `;
+    card.onclick = () => selectTemplate(key, t);
+    grid.appendChild(card);
+  }
+}
+
+function selectTemplate(key, template) {
+  selectedTemplate = key;
+  // Highlight selected
+  document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`.template-card[data-key="${key}"]`).classList.add('selected');
+
+  if (key === 'custom') {
+    customBeliefs = [];
+    renderBeliefs();
+    document.getElementById('step-beliefs').style.display = 'block';
+  } else {
+    customBeliefs = [...template.seed_beliefs];
+    renderBeliefs();
+    document.getElementById('step-beliefs').style.display = 'block';
+  }
+
+  document.getElementById('step-keys').style.display = 'block';
+  document.getElementById('step-launch').style.display = 'block';
+}
+
+function renderBeliefs() {
+  const el = document.getElementById('beliefs-list');
+  el.innerHTML = customBeliefs.map((b, i) => `
+    <div class="seed-belief-item">
+      <span class="belief-stmt">${esc(b.statement)}</span>
+      <span class="belief-tags">${(b.tags || []).join(', ')}</span>
+      <span class="belief-conf">${(b.confidence || 0.7).toFixed(1)}</span>
+      <button onclick="removeSeedBelief(${i})">X</button>
+    </div>
+  `).join('');
+}
+
+function addSeedBelief() {
+  const stmt = document.getElementById('new-belief-stmt').value.trim();
+  const tags = document.getElementById('new-belief-tags').value.trim().split(',').map(t => t.trim()).filter(Boolean);
+  const conf = parseFloat(document.getElementById('new-belief-conf').value) || 0.7;
+
+  if (!stmt) return;
+
+  customBeliefs.push({ statement: stmt, tags, confidence: conf });
+  renderBeliefs();
+
+  document.getElementById('new-belief-stmt').value = '';
+  document.getElementById('new-belief-tags').value = '';
+}
+
+function removeSeedBelief(index) {
+  customBeliefs.splice(index, 1);
+  renderBeliefs();
+}
+
+async function launchMimir() {
+  const errEl = document.getElementById('onboarding-error');
+  errEl.style.display = 'none';
+
+  if (!customBeliefs.length) {
+    errEl.textContent = 'Add at least one seed belief.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const payload = {
+    template: selectedTemplate,
+    seed_beliefs: customBeliefs,
+    llm_api_key: document.getElementById('onb-llm-key').value.trim(),
+    brave_api_key: document.getElementById('onb-brave-key').value.trim(),
+  };
+
+  try {
+    const result = await api('/api/onboarding/init', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (result.detail) {
+      errEl.textContent = result.detail;
+      errEl.style.display = 'block';
+      return;
+    }
+
+    // Success - redirect to dashboard
+    window.location.href = '/';
+  } catch (e) {
+    errEl.textContent = 'Failed to initialize: ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+// Auto-load templates
+if (document.getElementById('template-grid')) {
+  loadTemplates();
+}
+</script>
+</body>
+</html>
