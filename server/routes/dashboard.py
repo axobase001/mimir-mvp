@@ -151,3 +151,49 @@ async def get_cycle_log(request: Request, last_n: int = 20):
         }
         for ep in mem.episodes[-last_n:]
     ]}
+
+
+@router.get("/api/metrics/learning_curve")
+async def get_learning_curve(request: Request):
+    """Return learning curve metrics extracted from cycle logs."""
+    user_id, engine, state = _get_user_brain(request)
+    mem = state["memory"]
+    bg = state["belief_graph"]
+    sec = state["sec_matrix"]
+    llm_client = state["llm_client"]
+
+    # Per-cycle token consumption trend (from usage stats)
+    usage = llm_client.get_usage_stats()
+    avg_tokens_per_cycle = 0
+    if engine.cycle_count > 0 and usage.get("prompt_tokens"):
+        avg_tokens_per_cycle = (
+            usage["prompt_tokens"] + usage["completion_tokens"]
+        ) / engine.cycle_count
+
+    # New belief acquisition efficiency: beliefs per cycle
+    total_beliefs = len(bg.get_all_beliefs())
+    beliefs_per_cycle = total_beliefs / max(1, engine.cycle_count)
+
+    # SEC differentiation: spread of C values
+    c_values = [e.c_value for e in sec.entries.values()]
+    sec_spread = max(c_values) - min(c_values) if c_values else 0.0
+
+    # Repeated task PE trend from episodes
+    pe_trend = []
+    for ep in mem.episodes:
+        pe_trend.append({
+            "cycle": ep.cycle,
+            "pe_before": round(ep.pe_before, 4),
+            "pe_after": round(ep.pe_after, 4),
+            "pe_delta": round(ep.pe_before - ep.pe_after, 4),
+        })
+
+    return {
+        "cycle_count": engine.cycle_count,
+        "avg_tokens_per_cycle": round(avg_tokens_per_cycle, 1),
+        "beliefs_per_cycle": round(beliefs_per_cycle, 2),
+        "total_beliefs": total_beliefs,
+        "sec_spread": round(sec_spread, 4),
+        "sec_cluster_count": len(sec.entries),
+        "pe_trend": pe_trend[-50:],  # Last 50 cycles
+    }

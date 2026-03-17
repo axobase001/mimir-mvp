@@ -62,6 +62,21 @@ class LLMClient:
         self._total_completion_tokens = 0
         self._total_cost = 0.0
         self._call_count = 0
+        self._hourly_timestamps: list[float] = []
+        self.max_calls_per_hour = 10
+
+    def _check_hourly_limit(self) -> None:
+        """Enforce max LLM calls per hour."""
+        import time as _time
+        now = _time.time()
+        cutoff = now - 3600
+        self._hourly_timestamps = [t for t in self._hourly_timestamps if t > cutoff]
+        if len(self._hourly_timestamps) >= self.max_calls_per_hour:
+            raise RuntimeError(
+                f"LLM rate limit: {self.max_calls_per_hour} calls/hour exceeded "
+                f"({len(self._hourly_timestamps)} in last hour)"
+            )
+        self._hourly_timestamps.append(now)
 
     async def complete(
         self,
@@ -71,6 +86,7 @@ class LLMClient:
         max_tokens: int | None = None,
     ) -> str:
         """Send chat completion request with retry."""
+        self._check_hourly_limit()
         payload = {
             "model": self.model,
             "messages": [

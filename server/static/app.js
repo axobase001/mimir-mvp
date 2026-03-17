@@ -5,6 +5,7 @@ let currentUser = null;
 // ═══ State ═══
 let graphSim = null;
 let secChart = null;
+let learningChart = null;
 let ws = null;
 
 const SOURCE_COLORS = {
@@ -172,6 +173,7 @@ async function refresh() {
     renderGoals(d.all_goals);
     renderLog(d.recent_episodes);
     renderNotifications(d.notifications);
+    refreshLearningCurve();
   } catch (e) {
     // Silently fail on refresh errors
   }
@@ -473,6 +475,81 @@ function connectWS() {
   ws.onerror = () => ws.close();
 }
 
+// ═══ Learning Curve ═══
+async function refreshLearningCurve() {
+  try {
+    const d = await api('/api/metrics/learning_curve');
+    renderLearningCurve(d);
+  } catch (e) {
+    // Silently fail
+  }
+}
+
+function renderLearningCurve(data) {
+  const canvas = document.getElementById('learning-chart');
+  if (!canvas || !data.pe_trend || data.pe_trend.length === 0) return;
+
+  const labels = data.pe_trend.map(p => 'C' + p.cycle);
+  const peData = data.pe_trend.map(p => p.pe_before);
+
+  const chartData = {
+    labels: labels,
+    datasets: [{
+      label: 'PE per cycle',
+      data: peData,
+      borderColor: 'rgba(34,197,94,0.9)',
+      backgroundColor: 'rgba(34,197,94,0.1)',
+      fill: true,
+      tension: 0.3,
+      pointRadius: 2,
+    }],
+  };
+
+  if (learningChart) {
+    learningChart.data = chartData;
+    learningChart.update('none');
+    return;
+  }
+
+  learningChart = new Chart(canvas, {
+    type: 'line',
+    data: chartData,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, labels: { color: '#c8cdd5', font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `PE=${ctx.parsed.y.toFixed(4)}`,
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: { color: '#1a2035' },
+          ticks: { color: '#64748b', font: { size: 9 }, maxTicksLimit: 20 },
+        },
+        y: {
+          grid: { color: '#1a2035' },
+          ticks: { color: '#64748b', font: { size: 10 } },
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+
+  // Update stats text if element exists
+  const statsEl = document.getElementById('learning-stats');
+  if (statsEl) {
+    statsEl.innerHTML = `
+      <span>Beliefs/cycle: ${data.beliefs_per_cycle}</span>
+      <span>SEC spread: ${data.sec_spread}</span>
+      <span>Avg tokens/cycle: ${data.avg_tokens_per_cycle}</span>
+    `;
+  }
+}
+
 // ═══ Utils ═══
 function esc(s) {
   if (!s) return '';
@@ -485,9 +562,8 @@ function esc(s) {
 setupAuthForm();
 setupChat();
 
-// Check token on load
-if (authToken) {
-  checkAndRoute();
-} else {
-  showAuthScreen();
-}
+// DEV MODE: skip auth, show dashboard directly
+showDashboard();
+refresh();
+connectWS();
+setInterval(refresh, 15000);

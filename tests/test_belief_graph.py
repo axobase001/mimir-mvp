@@ -90,8 +90,8 @@ def test_decay_unverified():
     assert "obs" not in decayed
 
     inf = bg.get_belief("inf")
-    # inference decays at 2x: 0.8 - 0.02*2 = 0.76
-    assert abs(inf.confidence - 0.76) < 1e-9
+    # inference decays at 2x category rate: FACT=0.03, 0.8 - 0.03*2 = 0.74
+    assert abs(inf.confidence - 0.74) < 1e-9
 
 
 def test_prune_removes_low_confidence_leaf():

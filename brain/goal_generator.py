@@ -1,4 +1,4 @@
-from ..types import Goal, GoalStatus
+from ..types import BeliefCategory, Goal, GoalOrigin, GoalStatus
 from ..config import MimirConfig
 from .belief_graph import BeliefGraph
 from .sec_matrix import SECMatrix
@@ -41,6 +41,10 @@ class GoalGenerator:
             self.config.goal_pe_persistence,
         )
         for belief in high_pe:
+            # PREFERENCE beliefs with high PE do not trigger goals
+            if belief.category == BeliefCategory.PREFERENCE:
+                continue
+
             if self._has_active_goal_for(belief.id):
                 continue
 
@@ -61,6 +65,7 @@ class GoalGenerator:
                     status=GoalStatus.ACTIVE,
                     created_at=current_cycle,
                     priority=priority,
+                    origin=GoalOrigin.ENDOGENOUS,
                 )
             )
 
@@ -86,6 +91,7 @@ class GoalGenerator:
                     status=GoalStatus.ACTIVE,
                     created_at=current_cycle,
                     priority=priority,
+                    origin=GoalOrigin.ENDOGENOUS,
                 )
             )
 

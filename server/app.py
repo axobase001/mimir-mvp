@@ -30,9 +30,14 @@ class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         path = request.url.path
 
+        # ── DEV MODE: bypass auth, inject default user ──
+        _dev_uid = getattr(request.app.state, "_dev_user_id", None)
+        if _dev_uid:
+            request.state.user_id = _dev_uid
+            return await call_next(request)
+
         # Allow public paths
         if path == "/" or any(path.startswith(p) for p in _PUBLIC_PREFIXES):
-            # For /api/auth/refresh and /api/auth/me, still try to parse token
             if path in ("/api/auth/refresh", "/api/auth/me"):
                 self._try_extract_user(request)
             return await call_next(request)

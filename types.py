@@ -10,10 +10,39 @@ class BeliefSource(Enum):
     ABSTRACTION = "abstraction"
 
 
+class BeliefCategory(Enum):
+    FACT = "fact"
+    PREFERENCE = "preference"
+    PROCEDURE = "procedure"
+    HYPOTHESIS = "hypothesis"
+
+
 class GoalStatus(Enum):
     ACTIVE = "active"
     COMPLETED = "completed"
     ABANDONED = "abandoned"
+
+
+class GoalOrigin(Enum):
+    ENDOGENOUS = "endogenous"
+    EXOGENOUS = "exogenous"
+
+
+class PEType(Enum):
+    OBSERVATION = "observation"
+    ACTION = "action"
+    INTERACTION = "interaction"
+
+
+@dataclass
+class TypedPE:
+    pe_type: PEType
+    value: float
+    cycle: int = 0
+    source_id: str = ""
+
+    def __float__(self) -> float:
+        return self.value
 
 
 @dataclass
@@ -28,6 +57,7 @@ class Belief:
     pe_history: list[float] = field(default_factory=list)
     tags: list[str] = field(default_factory=list)
     parent_ids: list[str] = field(default_factory=list)
+    category: BeliefCategory = BeliefCategory.FACT
 
 
 @dataclass
@@ -76,3 +106,4 @@ class Goal:
     status: GoalStatus = GoalStatus.ACTIVE
     created_at: int = 0
     priority: float = 0.0
+    origin: GoalOrigin = GoalOrigin.ENDOGENOUS

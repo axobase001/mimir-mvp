@@ -4,7 +4,7 @@ from pathlib import Path
 from .brain.belief_graph import BeliefGraph
 from .brain.sec_matrix import SECMatrix
 from .brain.memory import Memory
-from .types import Goal, GoalStatus
+from .types import Goal, GoalOrigin, GoalStatus
 from .config import MimirConfig
 
 
@@ -35,6 +35,7 @@ class MimirState:
                     "status": g.status.value,
                     "created_at": g.created_at,
                     "priority": g.priority,
+                    "origin": g.origin.value,
                 }
                 for gid, g in goals.items()
             },
@@ -67,6 +68,13 @@ class MimirState:
 
         goals: dict[str, Goal] = {}
         for gid, gdata in data.get("goals", {}).items():
+            # Backward compatible: default origin to ENDOGENOUS
+            origin_value = gdata.get("origin", "endogenous")
+            try:
+                origin = GoalOrigin(origin_value)
+            except ValueError:
+                origin = GoalOrigin.ENDOGENOUS
+
             goals[gid] = Goal(
                 id=gdata["id"],
                 target_belief_id=gdata["target_belief_id"],
@@ -75,6 +83,7 @@ class MimirState:
                 status=GoalStatus(gdata["status"]),
                 created_at=gdata["created_at"],
                 priority=gdata["priority"],
+                origin=origin,
             )
 
         cycle_count = data.get("cycle_count", 0)

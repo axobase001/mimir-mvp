@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, HTTPException
 
-from ...types import Goal, GoalStatus
+from ...types import Goal, GoalOrigin, GoalStatus
 
 router = APIRouter()
 
@@ -59,6 +59,7 @@ async def add_goal(request: Request, data: dict):
         status=GoalStatus.ACTIVE,
         created_at=engine.cycle_count,
         priority=priority,
+        origin=GoalOrigin.EXOGENOUS,
     )
     gg.goals[goal.id] = goal
     return {"action": "created", "goal_id": goal.id}

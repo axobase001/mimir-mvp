@@ -159,6 +159,16 @@ class UserDB:
             return None
         return self._row_to_dict(row)
 
+    def get_user_by_email(self, email: str) -> Optional[dict]:
+        """Get user by email."""
+        with self._conn() as conn:
+            row = conn.execute(
+                "SELECT * FROM users WHERE email = ?", (email,)
+            ).fetchone()
+        if row is None:
+            return None
+        return self._row_to_dict(row)
+
     def update_usage(self, user_id: str, cycles_delta: int = 0, beliefs_count: int = -1) -> None:
         """Update usage counters for a user."""
         with self._conn() as conn:

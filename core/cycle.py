@@ -11,7 +11,7 @@ from ..llm.internal import InternalLLM
 from ..llm.external import ExternalLLM
 from ..skills.base import SkillRegistry
 from ..skills.registry import SmartSkillRegistry
-from ..types import Belief, BeliefSource, Episode, GoalStatus, Procedure
+from ..types import Belief, BeliefCategory, BeliefSource, Episode, GoalOrigin, GoalStatus, PEType, Procedure, TypedPE
 from ..config import MimirConfig
 from .notifier import Notifier, Notification, NotifyLevel
 
@@ -206,8 +206,12 @@ class MimirCycle:
                 else:
                     observed = predicted  # irrelevant -> no surprise
 
-                pe = self.pe_engine.compute_pe(belief.id, predicted, observed)
-                pe_values[belief.id] = pe
+                typed_pe = self.pe_engine.compute_pe(
+                    belief.id, predicted, observed,
+                    pe_type=PEType.OBSERVATION, cycle=cycle,
+                )
+                pe = typed_pe.value
+                pe_values[belief.id] = typed_pe
 
                 observation_results.append({
                     "belief_id": belief.id,
@@ -293,6 +297,15 @@ class MimirCycle:
                             "reason": act_reason,
                         }
 
+                        # Tag action PE as ACTION type
+                        expected_pe = 0.0 if result.success else 0.5
+                        actual_pe = result.pe_impact if hasattr(result, 'pe_impact') else 0.0
+                        action_typed_pe = self.pe_engine.compute_action_pe(
+                            expected_pe, actual_pe, cycle=cycle,
+                            source_id=plan["skill_name"],
+                        )
+                        pe_values[f"action_{plan['skill_name']}"] = action_typed_pe
+
                         # Feed result back into belief graph and procedural memory
                         if result.success:
                             proc = Procedure(
@@ -332,11 +345,16 @@ class MimirCycle:
 
         # -- Phase 5: PREDICTION ERROR --
         agg_pe = self.pe_engine.compute_aggregate_pe(pe_values)
+        # Convert TypedPE to float for JSON serialization
+        pe_values_plain = {
+            k: (v.value if isinstance(v, TypedPE) else float(v))
+            for k, v in pe_values.items()
+        }
         summary["phases"]["pe"] = {
-            "per_belief": pe_values,
+            "per_belief": pe_values_plain,
             "aggregate": round(agg_pe, 4),
         }
-        log.info("Phase 5 PE: aggregate=%.4f, per_belief=%s", agg_pe, pe_values)
+        log.info("Phase 5 PE: aggregate=%.4f, per_belief=%s", agg_pe, pe_values_plain)
 
         # -- Phase 6: UPDATE --
         updated_beliefs: list[str] = []
@@ -424,6 +442,9 @@ class MimirCycle:
                 continue
             target = self.bg.get_belief(goal.target_belief_id)
             if target is None:
+                # EXOGENOUS goals are not auto-abandoned
+                if goal.origin == GoalOrigin.EXOGENOUS:
+                    continue
                 self.goal_gen.abandon_goal(gid, "target belief pruned")
                 abandoned_goals.append(gid)
             elif target.pe_history and target.pe_history[-1] < self.config.goal_pe_threshold * 0.5:
@@ -439,11 +460,12 @@ class MimirCycle:
 
         # PE jump notifications
         for bid, pe in pe_values.items():
-            if pe > self.config.pe_jump_threshold:
+            pe_val = pe.value if isinstance(pe, TypedPE) else float(pe)
+            if pe_val > self.config.pe_jump_threshold:
                 self.notifier.push(Notification(
                     level=NotifyLevel.URGENT,
                     title=f"High PE jump: {bid}",
-                    body=f"PE={pe:.3f} exceeds threshold {self.config.pe_jump_threshold}",
+                    body=f"PE={pe_val:.3f} exceeds threshold {self.config.pe_jump_threshold}",
                     cycle=cycle,
                     related_beliefs=[bid],
                 ))
@@ -503,6 +525,101 @@ class MimirCycle:
                  summary["active_goals"], agg_pe)
 
         return summary
+
+    async def run_fast_path(self, user_query: str) -> dict:
+        """Fast path for user queries: belief retrieval + optional instant search.
+
+        Skips predict/SEC/goal/prune/reasoning. Target: 2-5 seconds.
+        Returns {"answer": str, "beliefs_used": list, "searched": bool}.
+        """
+        cycle = self.cycle_count  # Use current cycle, don't increment
+
+        # 1. Extract relevant beliefs by keyword matching
+        query_words = [w.lower() for w in user_query.split() if len(w) > 2]
+        relevant: list[Belief] = []
+        for b in self.bg.get_all_beliefs():
+            if any(word in b.statement.lower() for word in query_words):
+                relevant.append(b)
+            elif any(word in tag.lower() for tag in b.tags for word in query_words):
+                relevant.append(b)
+            if len(relevant) >= 10:
+                break
+
+        # 2. Check for high-confidence beliefs
+        high_conf = [b for b in relevant if b.confidence > 0.6]
+        searched = False
+
+        beliefs_ctx = ""
+        search_results = ""
+
+        if high_conf:
+            beliefs_ctx = "\n".join(
+                f"- [{b.id}] (conf={b.confidence:.2f}) {b.statement}"
+                for b in sorted(high_conf, key=lambda x: x.confidence, reverse=True)[:5]
+            )
+        else:
+            # 3. No high-confidence match: instant search
+            search_skill = self.skills.get("brave_search")
+            if search_skill is not None:
+                try:
+                    query = await self.external.intent_to_query(user_query)
+                    result = await search_skill.execute({"query": query})
+                    if result.get("success"):
+                        search_results = result.get("result", "")
+                        searched = True
+
+                        # Extract and add new beliefs
+                        from ..types import BeliefCategory as _BC
+                        dummy = Belief(
+                            id="fast_query", statement=user_query,
+                            confidence=0.5, source=BeliefSource.SEED,
+                            created_at=cycle, last_updated=cycle,
+                            last_verified=cycle, tags=["user_query"],
+                        )
+                        extraction = await self.external.extract_beliefs(
+                            search_results, dummy
+                        )
+                        for nb in extraction.get("new_beliefs", []):
+                            cat_str = nb.get("category", "fact")
+                            try:
+                                cat = _BC(cat_str)
+                            except ValueError:
+                                cat = _BC.FACT
+                            new_b = Belief(
+                                id="", statement=nb["statement"],
+                                confidence=nb.get("confidence", 0.5),
+                                source=BeliefSource.OBSERVATION,
+                                created_at=cycle, last_updated=cycle,
+                                last_verified=cycle,
+                                tags=nb.get("tags", ["user_query"]),
+                                category=cat,
+                            )
+                            self.bg.add_belief(new_b)
+                except Exception as e:
+                    log.warning("Fast path search failed: %s", e)
+
+        # 4. Generate answer
+        answer = await self.external.chat_answer(
+            question=user_query,
+            beliefs_context=beliefs_ctx,
+            search_results=search_results,
+        )
+
+        # 5. Record as episode
+        self.mem.add_episode(Episode(
+            cycle=cycle,
+            action=f"fast_path: {user_query[:60]}",
+            outcome=answer[:200],
+            pe_before=0.0,
+            pe_after=0.0,
+            beliefs_affected=[b.id for b in relevant[:5]],
+        ))
+
+        return {
+            "answer": answer,
+            "beliefs_used": [b.id for b in high_conf[:5]],
+            "searched": searched,
+        }
 
     async def run(
         self, num_cycles: int = -1, cycle_interval_seconds: float | None = None

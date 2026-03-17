@@ -1,6 +1,6 @@
 import logging
 
-from ..types import Belief, BeliefSource, Goal
+from ..types import Belief, BeliefCategory, BeliefSource, Goal
 from ..config import MimirConfig
 from .client import LLMClient, parse_json_response
 
@@ -46,6 +46,7 @@ class InternalLLM:
                 last_verified=cycle,
                 tags=data.get("tags", []),
                 parent_ids=[belief_a.id, belief_b.id],
+                category=BeliefCategory.HYPOTHESIS,
             )
         except Exception as e:
             log.warning("reason() failed: %s", e)
@@ -136,6 +137,7 @@ class InternalLLM:
                 last_verified=cycle,
                 tags=data.get("tags", []),
                 parent_ids=[b.id for b in beliefs],
+                category=BeliefCategory.HYPOTHESIS,
             )
         except Exception as e:
             log.warning("abstract() failed: %s", e)

@@ -78,6 +78,23 @@ async def main_async(args: argparse.Namespace) -> None:
     app.state.config = config
     app.state.max_users = config.max_users
 
+    # ── DEV MODE: auto-create user + brain, bypass auth ──
+    seed_beliefs = config_data.get("seed_beliefs", [])
+    try:
+        dev_user = user_db.get_user_by_email("dev@mimir.local")
+        if dev_user is None:
+            dev_user = user_db.create_user("dev@mimir.local", "devdev123", "Dev")
+        dev_uid = dev_user["id"]
+        app.state._dev_user_id = dev_uid
+        if not brain_store.brain_exists(dev_uid) and seed_beliefs:
+            await scheduler.start_brain(dev_uid, seed_beliefs)
+            log.info("DEV brain initialized with %d seeds", len(seed_beliefs))
+        elif brain_store.brain_exists(dev_uid):
+            await scheduler.start_brain(dev_uid)
+            log.info("DEV brain restored")
+    except Exception as e:
+        log.warning("DEV mode setup failed: %s", e)
+
     # Shutdown handler
     def on_signal(*_: Any) -> None:
         global _should_stop

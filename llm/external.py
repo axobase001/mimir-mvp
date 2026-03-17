@@ -1,7 +1,7 @@
 import json
 import logging
 
-from ..types import Belief
+from ..types import Belief, BeliefCategory
 from ..config import MimirConfig
 from .client import LLMClient, parse_json_response
 
@@ -41,10 +41,13 @@ class ExternalLLM:
             '  "observed_confidence": float (0-1, 你对verdict的确信程度),\n'
             '  "extracted_facts": ["fact1", "fact2", ...],\n'
             '  "new_beliefs": [\n'
-            '    {"statement": "...", "tags": [...], "confidence": float}\n'
+            '    {"statement": "...", "tags": [...], "confidence": float, '
+            '"category": "fact" | "preference" | "procedure" | "hypothesis"}\n'
             "  ]\n"
             "}\n"
-            "new_beliefs是搜索结果中发现的、信念图里可能还没有的新信息。"
+            "new_beliefs是搜索结果中发现的、信念图里可能还没有的新信息。\n"
+            "category字段：fact=客观事实, preference=偏好/观点, "
+            "procedure=操作步骤, hypothesis=假设/推测。"
         )
         user = (
             f"待验证信念：{target_belief.statement} "
@@ -81,13 +84,18 @@ class ExternalLLM:
             if not isinstance(new_beliefs, list):
                 new_beliefs = []
             # Validate each new belief
+            _valid_categories = {"fact", "preference", "procedure", "hypothesis"}
             valid_new = []
             for nb in new_beliefs:
                 if isinstance(nb, dict) and "statement" in nb:
+                    cat = nb.get("category", "fact")
+                    if cat not in _valid_categories:
+                        cat = "fact"
                     valid_new.append({
                         "statement": str(nb["statement"]),
                         "tags": nb.get("tags", []),
                         "confidence": max(0.0, min(1.0, float(nb.get("confidence", 0.5)))),
+                        "category": cat,
                     })
 
             return {

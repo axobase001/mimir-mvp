@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -61,3 +61,30 @@ class MimirConfig:
     # Scheduler
     scheduler_interval: float = 60.0
     inter_user_delay: float = 2.0
+
+    # Belief category parameters
+    belief_decay_rates: dict = field(default_factory=lambda: {
+        "fact": 0.03,
+        "preference": 0.005,
+        "procedure": 0.01,
+        "hypothesis": 0.05,
+    })
+    belief_pe_sensitivity: dict = field(default_factory=lambda: {
+        "fact": 1.0,
+        "preference": 0.3,
+        "procedure": 0.5,
+        "hypothesis": 1.5,
+    })
+    belief_min_confidence_to_keep: dict = field(default_factory=lambda: {
+        "fact": 0.05,
+        "preference": 0.2,
+        "procedure": 0.1,
+        "hypothesis": 0.03,
+    })
+
+    # PE type weights for SEC
+    sec_pe_weights: dict = field(default_factory=lambda: {
+        "observation": 1.0,
+        "action": 0.5,
+        "interaction": 0.3,
+    })

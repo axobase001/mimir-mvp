@@ -1,12 +1,16 @@
 import logging
+import uuid
 
 from fastapi import APIRouter, Request, HTTPException
 
 from ...llm.client import parse_json_response
-from ...types import Belief, BeliefSource
+from ...types import Belief, BeliefCategory, BeliefSource, PEType, TypedPE
 
 router = APIRouter()
 log = logging.getLogger(__name__)
+
+# In-memory store for feedback tokens (maps token -> cycle info)
+_feedback_tokens: dict[str, dict] = {}
 
 
 def _get_user_brain(request: Request):
@@ -115,6 +119,18 @@ async def _live_search(state, user_msg: str, tags: list[str]) -> tuple[str, list
     return raw, new_beliefs
 
 
+_NEGATIVE_FEEDBACK_WORDS = {
+    "不好", "太模糊", "wrong", "错了", "不对", "不准确", "差", "糟糕",
+    "bad", "incorrect", "inaccurate", "vague", "useless", "no",
+}
+
+
+def _is_negative_feedback(text: str) -> bool:
+    """Check if user message contains negative feedback keywords."""
+    text_lower = text.lower().strip()
+    return any(word in text_lower for word in _NEGATIVE_FEEDBACK_WORDS)
+
+
 @router.post("/api/chat")
 async def chat(request: Request, message: dict):
     user_id, engine, state = _get_user_brain(request)
@@ -126,6 +142,19 @@ async def chat(request: Request, message: dict):
     user_msg = message.get("message", "")
     if not user_msg:
         return {"reply": "请输入消息。", "confidence": 0, "sources": [], "searching": False}
+
+    # Check for negative feedback on previous response
+    feedback_token = message.get("feedback_token")
+    if feedback_token and feedback_token in _feedback_tokens and _is_negative_feedback(user_msg):
+        token_info = _feedback_tokens.pop(feedback_token)
+        # Generate INTERACTION PE
+        pe_engine = state.get("prediction_engine") or engine.pe_engine
+        interaction_pe = pe_engine.compute_interaction_pe(
+            expected=0.0, actual=0.7,
+            cycle=engine.cycle_count,
+            source_id=f"chat_feedback_{feedback_token[:8]}",
+        )
+        log.info("Negative feedback received, INTERACTION PE=%.3f", interaction_pe.value)
 
     # Step 0: Classify — query vs action
     intent_type = await _classify_intent(llm_client, user_msg)
@@ -158,62 +187,25 @@ async def chat(request: Request, message: dict):
         except Exception as e:
             log.warning("Action failed, falling back to query: %s", e)
 
-    # Step 1: Extract tags
-    tags = await _extract_tags(llm_client, user_msg)
+    # Use fast_path for query processing
+    fast_result = await engine.run_fast_path(user_msg)
 
-    # Step 2: Find existing beliefs
-    relevant = _find_relevant_beliefs(bg, tags, user_msg)
-
-    # Step 3: Build beliefs context
-    high_conf = sorted(
-        [b for b in relevant if b.confidence > 0.2],
-        key=lambda b: b.confidence,
-        reverse=True,
-    )[:10]
-
-    beliefs_ctx = ""
-    if high_conf:
-        beliefs_ctx = "\n".join(
-            f"- [{b.id}] (conf={b.confidence:.2f}) {b.statement}"
-            for b in high_conf
-        )
-
-    # Step 4: ALWAYS search if beliefs are thin (< 3 high-conf) or no beliefs at all
-    search_results = ""
-    new_from_search: list[dict] = []
-    needs_search = len(high_conf) < 3
-
-    if needs_search:
-        search_results, new_from_search = await _live_search(state, user_msg, tags)
-
-        # Inject new beliefs into graph immediately
-        for nb in new_from_search:
-            new_b = Belief(
-                id="",
-                statement=nb["statement"],
-                confidence=nb.get("confidence", 0.5),
-                source=BeliefSource.OBSERVATION,
-                created_at=engine.cycle_count,
-                last_updated=engine.cycle_count,
-                last_verified=engine.cycle_count,
-                tags=nb.get("tags", tags[:3] if tags else ["user_query"]),
-            )
-            bg.add_belief(new_b)
-
-    # Step 5: Generate answer using the dedicated chat method
-    avg_conf = (
-        sum(b.confidence for b in high_conf) / len(high_conf) if high_conf else 0.3
-    )
-
-    reply = await external_llm.chat_answer(
-        question=user_msg,
-        beliefs_context=beliefs_ctx,
-        search_results=search_results,
-    )
+    # Generate feedback token for this response
+    new_feedback_token = str(uuid.uuid4())
+    _feedback_tokens[new_feedback_token] = {
+        "cycle": engine.cycle_count,
+        "query": user_msg[:100],
+    }
+    # Cap stored tokens to prevent memory leak
+    if len(_feedback_tokens) > 100:
+        oldest_keys = list(_feedback_tokens.keys())[:50]
+        for k in oldest_keys:
+            _feedback_tokens.pop(k, None)
 
     return {
-        "reply": reply,
-        "confidence": round(avg_conf, 3),
-        "sources": [b.id for b in high_conf[:5]],
-        "searching": needs_search,
+        "reply": fast_result["answer"],
+        "confidence": 0.8 if fast_result["beliefs_used"] else 0.5,
+        "sources": fast_result["beliefs_used"],
+        "searching": fast_result["searched"],
+        "feedback_token": new_feedback_token,
     }

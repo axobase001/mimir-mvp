@@ -23,9 +23,12 @@ def test_predictions_match_current_confidence():
 def test_compute_pe():
     engine = PredictionEngine(MimirConfig())
 
-    assert engine.compute_pe("b1", predicted=0.8, observed=0.8) == 0.0
-    assert abs(engine.compute_pe("b1", predicted=0.8, observed=0.3) - 0.5) < 1e-9
-    assert abs(engine.compute_pe("b1", predicted=0.2, observed=0.9) - 0.7) < 1e-9
+    pe0 = engine.compute_pe("b1", predicted=0.8, observed=0.8)
+    assert pe0.value == 0.0
+    pe1 = engine.compute_pe("b1", predicted=0.8, observed=0.3)
+    assert abs(pe1.value - 0.5) < 1e-9
+    pe2 = engine.compute_pe("b1", predicted=0.2, observed=0.9)
+    assert abs(pe2.value - 0.7) < 1e-9
 
 
 def test_aggregate_pe():
@@ -41,4 +44,4 @@ def test_pe_symmetry():
     # PE should be the same regardless of direction
     pe1 = engine.compute_pe("b1", predicted=0.8, observed=0.3)
     pe2 = engine.compute_pe("b1", predicted=0.3, observed=0.8)
-    assert abs(pe1 - pe2) < 1e-9
+    assert abs(pe1.value - pe2.value) < 1e-9
