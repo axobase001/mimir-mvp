@@ -58,6 +58,7 @@ class Belief:
     tags: list[str] = field(default_factory=list)
     parent_ids: list[str] = field(default_factory=list)
     category: BeliefCategory = BeliefCategory.FACT
+    status: str = ""
 
 
 @dataclass
@@ -107,3 +108,4 @@ class Goal:
     created_at: int = 0
     priority: float = 0.0
     origin: GoalOrigin = GoalOrigin.ENDOGENOUS
+    _cycles_below_complete: int = 0  # hysteresis counter

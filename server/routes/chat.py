@@ -159,33 +159,58 @@ async def chat(request: Request, message: dict):
     # Step 0: Classify — query vs action
     intent_type = await _classify_intent(llm_client, user_msg)
 
-    # Action requests → action engine
+    # Action requests → multi-step action engine
     if intent_type == "action" and engine.action_engine is not None:
         try:
-            plan = await engine.action_engine.plan_action(
+            # Build belief context for the action
+            all_beliefs = bg.get_all_beliefs()
+            belief_ctx = "\n".join(
+                f"- ({b.confidence:.2f}) {b.statement}"
+                for b in sorted(all_beliefs, key=lambda x: x.confidence, reverse=True)[:10]
+            )
+
+            # Plan multi-step
+            steps = await engine.action_engine.plan_multistep(
                 intent=user_msg,
-                goal=user_msg,
-                belief_context="",
+                belief_context=belief_ctx,
                 sec_matrix=state.get("sec_matrix") or engine.sec,
                 memory=state.get("memory") or engine.mem,
             )
-            if plan.get("skill_name"):
-                result = await engine.action_engine.execute_action(
-                    plan, pe_before=0.0,
+
+            if steps:
+                result = await engine.action_engine.execute_plan(
+                    steps=steps,
+                    intent=user_msg,
+                    belief_context=belief_ctx,
+                    pe_before=0.0,
                 )
+
+                # Generate human-readable reply from the execution results
+                reply = result.get("details", result.get("summary", ""))
+                if result.get("accumulated_output"):
+                    try:
+                        reply = await external_llm.chat_answer(
+                            question=user_msg,
+                            beliefs_context="",
+                            search_results=result["accumulated_output"][-2000:],
+                        )
+                    except Exception:
+                        pass
+
                 return {
-                    "reply": result.summary if result.summary else str(result.result),
-                    "confidence": 1.0 if result.success else 0.0,
+                    "reply": reply,
+                    "confidence": 1.0 if result["success"] else 0.5,
                     "sources": [],
                     "searching": False,
                     "action": {
-                        "skill": plan["skill_name"],
-                        "success": result.success,
-                        "error": result.error,
+                        "steps": len(steps),
+                        "success": result["success"],
+                        "summary": result["summary"],
+                        "artifacts": result.get("artifacts", []),
                     },
                 }
         except Exception as e:
-            log.warning("Action failed, falling back to query: %s", e)
+            log.warning("Multi-step action failed, falling back to query: %s", e)
 
     # Use fast_path for query processing
     fast_result = await engine.run_fast_path(user_msg)

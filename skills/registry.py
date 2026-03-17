@@ -70,6 +70,38 @@ class SmartSkillRegistry:
         goal_lower = goal.lower() if goal else ""
         candidates: list[dict] = []
 
+        # Expand intent with bilingual keyword mapping
+        _keyword_map = {
+            "写": "write_document generate_report",
+            "报告": "generate_report write_document summarize",
+            "分析": "analyze_data statistics trend_analysis",
+            "搜索": "web_search information_retrieval",
+            "搜": "web_search information_retrieval",
+            "查": "web_search fetch_url",
+            "代码": "run_code data_processing",
+            "执行": "run_code automation",
+            "跑": "run_code automation",
+            "邮件": "send_email notify",
+            "发送": "send_email communicate",
+            "抓取": "fetch_url read_webpage",
+            "网页": "fetch_url read_webpage extract_content",
+            "文件": "write_file read_file create_file",
+            "保存": "write_file create_file write_document",
+            "读": "read_file inspect_content",
+            "总结": "summarize generate_report",
+            "摘要": "summarize generate_report",
+            "数据": "analyze_data csv_processing statistics",
+            "统计": "statistics analyze_data",
+            "趋势": "trend_analysis analyze_data",
+            "文档": "write_document format_text",
+            "markdown": "write_document generate_report",
+            "csv": "csv_processing analyze_data",
+        }
+        expanded_intent = intent_lower
+        for zh_key, en_caps in _keyword_map.items():
+            if zh_key in intent_lower:
+                expanded_intent += " " + en_caps
+
         # ── Priority 1: Procedural memory match ──
         memory_matched: set[str] = set()
         if memory is not None:
@@ -109,7 +141,7 @@ class SmartSkillRegistry:
             for cap in s.capabilities:
                 cap_words = cap.lower().replace("_", " ").split()
                 for word in cap_words:
-                    if word in intent_lower or word in goal_lower:
+                    if word in expanded_intent or word in goal_lower:
                         score += 0.3
             if score > 0:
                 cap_scores[s.name] = min(score, 0.9)

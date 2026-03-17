@@ -86,6 +86,7 @@ async def main_async(args: argparse.Namespace) -> None:
             dev_user = user_db.create_user("dev@mimir.local", "devdev123", "Dev")
         dev_uid = dev_user["id"]
         app.state._dev_user_id = dev_uid
+        scheduler._dev_user_id = dev_uid
         if not brain_store.brain_exists(dev_uid) and seed_beliefs:
             await scheduler.start_brain(dev_uid, seed_beliefs)
             log.info("DEV brain initialized with %d seeds", len(seed_beliefs))

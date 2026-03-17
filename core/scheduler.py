@@ -16,9 +16,15 @@ from ..llm.external import ExternalLLM
 from ..core.cycle import MimirCycle
 from ..core.notifier import Notifier
 from ..core.dedup import BeliefDeduplicator
-from ..skills.base import SkillRegistry
+from ..core.action_engine import ActionEngine
+from ..core.scheduled_tasks import ScheduledTaskManager
+from ..skills.registry import SmartSkillRegistry
 from ..skills.search import BraveSearchSkill
 from ..skills.file_io import FileReadSkill, FileWriteSkill
+from ..skills.code_exec import CodeExecSkill
+from ..skills.document import DocumentSkill
+from ..skills.web_fetch import WebFetchSkill
+from ..skills.data_analysis import DataAnalysisSkill
 from ..types import Belief, BeliefSource
 from ..config import MimirConfig
 from ..state import MimirState
@@ -111,11 +117,25 @@ class BrainScheduler:
         external = ExternalLLM(llm_client, self.config)
         dedup = BeliefDeduplicator(llm_client, self.config)
 
-        registry = SkillRegistry()
+        registry = SmartSkillRegistry()
         if brave_key:
             registry.register(BraveSearchSkill(brave_key))
         registry.register(FileReadSkill())
         registry.register(FileWriteSkill())
+        registry.register(CodeExecSkill())
+        registry.register(DocumentSkill())
+        registry.register(WebFetchSkill())
+        registry.register(DataAnalysisSkill())
+
+        action_engine = ActionEngine(
+            skill_registry=registry,
+            memory=mem,
+            notifier=notifier,
+            internal_llm=internal,
+            external_llm=external,
+        )
+
+        scheduled_tasks = ScheduledTaskManager()
 
         engine = MimirCycle(
             belief_graph=bg, sec_matrix=sec, prediction_engine=pe_engine,
@@ -123,6 +143,7 @@ class BrainScheduler:
             internal_llm=internal, external_llm=external,
             skill_registry=registry, notifier=notifier, config=self.config,
             dedup=dedup, ws_manager=self.ws_manager,
+            action_engine=action_engine,
         )
         engine.cycle_count = cycle_count
 
@@ -138,6 +159,8 @@ class BrainScheduler:
             "internal_llm": internal,
             "dedup": dedup,
             "skill_registry": registry,
+            "action_engine": action_engine,
+            "scheduled_tasks": scheduled_tasks,
         }
 
         # Save initial state
@@ -175,13 +198,35 @@ class BrainScheduler:
         if user_id not in self._running_brains:
             return None
 
-        # Check usage limit
-        if not self.user_db.check_limit(user_id, "cycles"):
+        # Check usage limit (skip for dev users)
+        dev_uid = getattr(self, '_dev_user_id', None)
+        if user_id != dev_uid and not self.user_db.check_limit(user_id, "cycles"):
             log.info("User %s hit cycle limit, skipping", user_id)
             return None
 
         engine = self._running_brains[user_id]
         state = self._brain_state[user_id]
+
+        # Execute due scheduled tasks before the cycle
+        sched_mgr: ScheduledTaskManager = state.get("scheduled_tasks")
+        if sched_mgr is not None:
+            action_eng = state.get("action_engine")
+            if action_eng is not None:
+                for task in sched_mgr.get_due_tasks():
+                    if task.user_id != user_id:
+                        continue
+                    try:
+                        plan = await action_eng.plan_action(
+                            intent=task.intent,
+                            goal=task.description,
+                        )
+                        if plan.get("skill_name"):
+                            await action_eng.execute_action(plan, user_id=user_id)
+                        sched_mgr.mark_executed(task.id)
+                        log.info("Scheduled task executed: %s (%s)",
+                                 task.id, task.description[:40])
+                    except Exception as e:
+                        log.warning("Scheduled task %s failed: %s", task.id, e)
 
         try:
             summary = await engine.run_one_cycle()

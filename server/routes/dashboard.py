@@ -40,6 +40,7 @@ async def get_dashboard(request: Request):
             "pe_latest": round(b.pe_history[-1], 4) if b.pe_history else 0,
             "created_at": b.created_at,
             "last_updated": b.last_updated,
+            "status": b.status,
         })
 
     edges = [
@@ -117,6 +118,7 @@ async def get_belief_detail(belief_id: str, request: Request):
         "created_at": b.created_at,
         "last_updated": b.last_updated,
         "last_verified": b.last_verified,
+        "status": b.status,
     }
 
 

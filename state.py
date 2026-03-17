@@ -36,6 +36,7 @@ class MimirState:
                     "created_at": g.created_at,
                     "priority": g.priority,
                     "origin": g.origin.value,
+                    "_cycles_below_complete": g._cycles_below_complete,
                 }
                 for gid, g in goals.items()
             },
@@ -84,6 +85,7 @@ class MimirState:
                 created_at=gdata["created_at"],
                 priority=gdata["priority"],
                 origin=origin,
+                _cycles_below_complete=gdata.get("_cycles_below_complete", 0),
             )
 
         cycle_count = data.get("cycle_count", 0)

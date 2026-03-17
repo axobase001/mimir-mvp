@@ -55,18 +55,106 @@ class MimirCycle:
     # ──────────────────────────────────────
 
     def _select_candidates(self) -> list[Belief]:
-        """Pick beliefs to observe this cycle, respecting SEC filter."""
+        """Pick beliefs to observe this cycle, respecting SEC filter.
+
+        Multi-goal fair scheduling: slots are distributed proportionally
+        to goal priority across all active goals.  EXOGENOUS goals bypass
+        SEC filtering entirely.
+        """
+        budget = self.config.search_budget_per_cycle
+        active_goals = [
+            g for g in self.goal_gen.goals.values()
+            if g.status == GoalStatus.ACTIVE
+        ]
+
+        # ── Goal-driven slot allocation ──
+        if active_goals:
+            total_priority = sum(g.priority for g in active_goals) or 1.0
+            goal_slots: list[tuple] = []  # (goal, slots)
+            allocated = 0
+            for g in sorted(active_goals, key=lambda g: g.priority, reverse=True):
+                slots = round(budget * g.priority / total_priority)
+                slots = max(0, slots)
+                goal_slots.append((g, slots))
+                allocated += slots
+
+            # Ensure minimum fairness: every goal gets at least 1 slot
+            # once every 3 cycles (tracked via cycle_count).
+            for i, (g, slots) in enumerate(goal_slots):
+                if slots == 0 and (self.cycle_count % 3 == (i % 3)):
+                    goal_slots[i] = (g, 1)
+
+            # Collect goal-driven candidates with fair allocation
+            filtered: list[Belief] = []
+            seen_ids: set[str] = set()
+
+            for g, slots in goal_slots:
+                if slots <= 0:
+                    continue
+                b = self.bg.get_belief(g.target_belief_id)
+                if b is None or b.id in seen_ids:
+                    continue
+
+                # EXOGENOUS goals bypass SEC filter
+                if g.origin == GoalOrigin.EXOGENOUS:
+                    filtered.append(b)
+                    seen_ids.add(b.id)
+                    log.info(
+                        "EXOGENOUS goal %s: belief %s bypasses SEC",
+                        g.id, b.id,
+                    )
+                    continue
+
+                # ENDOGENOUS goals go through SEC filter
+                blocked = False
+                for tag in b.tags:
+                    if not self.sec.filter_action(tag, self.cycle_count):
+                        log.info(
+                            "SEC filtered belief %s (tag=%s, C=%.3f)",
+                            b.id, tag, self.sec.get_c_value(tag),
+                        )
+                        blocked = True
+                        break
+                if not blocked:
+                    filtered.append(b)
+                    seen_ids.add(b.id)
+
+            # Fill remaining budget from PE-sorted + stale beliefs
+            remaining = budget - len(filtered)
+            if remaining > 0:
+                extras: list[Belief] = []
+                # high PE beliefs
+                for b in sorted(
+                    self.bg.get_all_beliefs(),
+                    key=lambda x: x.pe_history[-1] if x.pe_history else 0,
+                    reverse=True,
+                ):
+                    if b.id not in seen_ids:
+                        extras.append(b)
+                # stale beliefs
+                stale = self.bg.get_stale_beliefs(
+                    self.cycle_count, self.config.goal_staleness_threshold
+                )
+                for b in stale:
+                    if b.id not in seen_ids and b not in extras:
+                        extras.append(b)
+
+                for b in extras:
+                    if len(filtered) >= budget:
+                        break
+                    blocked = False
+                    for tag in b.tags:
+                        if not self.sec.filter_action(tag, self.cycle_count):
+                            blocked = True
+                            break
+                    if not blocked:
+                        filtered.append(b)
+                        seen_ids.add(b.id)
+
+            return filtered[:budget]
+
+        # ── No goals: original logic (PE sorted + stale, SEC filtered) ──
         candidates: list[Belief] = []
-
-        # Priority 1: beliefs tied to active goals
-        for goal in self.goal_gen.goals.values():
-            if goal.status != GoalStatus.ACTIVE:
-                continue
-            b = self.bg.get_belief(goal.target_belief_id)
-            if b is not None and b not in candidates:
-                candidates.append(b)
-
-        # Priority 2: high PE beliefs
         for b in sorted(
             self.bg.get_all_beliefs(),
             key=lambda x: x.pe_history[-1] if x.pe_history else 0,
@@ -75,7 +163,6 @@ class MimirCycle:
             if b not in candidates:
                 candidates.append(b)
 
-        # Priority 3: stale beliefs
         stale = self.bg.get_stale_beliefs(
             self.cycle_count, self.config.goal_staleness_threshold
         )
@@ -83,12 +170,10 @@ class MimirCycle:
             if b not in candidates:
                 candidates.append(b)
 
-        # SEC filter pass
-        filtered: list[Belief] = []
+        filtered = []
         for b in candidates:
-            if len(filtered) >= self.config.search_budget_per_cycle:
+            if len(filtered) >= budget:
                 break
-            # Check any tag against SEC
             blocked = False
             for tag in b.tags:
                 if not self.sec.filter_action(tag, self.cycle_count):
@@ -434,29 +519,61 @@ class MimirCycle:
         # -- Phase 8: GOAL CHECK --
         new_goals = self.goal_gen.generate_goals(cycle)
 
-        # Auto-complete/abandon
+        # Auto-complete/abandon with priority decay, max age, hysteresis
         completed_goals: list[str] = []
         abandoned_goals: list[str] = []
+        complete_threshold = self.config.goal_pe_threshold * 0.5
+        hysteresis_required = getattr(self.config, "goal_hysteresis_buffer", 2)
+        priority_decay = getattr(self.config, "goal_priority_decay", 0.02)
+        max_age = getattr(self.config, "goal_max_age_cycles", 100)
+
         for gid, goal in list(self.goal_gen.goals.items()):
             if goal.status != GoalStatus.ACTIVE:
                 continue
+
+            is_endo = goal.origin == GoalOrigin.ENDOGENOUS
             target = self.bg.get_belief(goal.target_belief_id)
-            if target is None:
-                # EXOGENOUS goals are not auto-abandoned
-                if goal.origin == GoalOrigin.EXOGENOUS:
+            age = cycle - goal.created_at
+
+            # --- Abandon checks (ENDOGENOUS only) ---
+            if is_endo:
+                # Target belief pruned
+                if target is None:
+                    self.goal_gen.abandon_goal(gid, "target belief pruned")
+                    abandoned_goals.append(gid)
                     continue
-                self.goal_gen.abandon_goal(gid, "target belief pruned")
-                abandoned_goals.append(gid)
-            elif target.pe_history and target.pe_history[-1] < self.config.goal_pe_threshold * 0.5:
-                self.goal_gen.complete_goal(gid)
-                completed_goals.append(gid)
-                self.notifier.push(Notification(
-                    level=NotifyLevel.RESULT,
-                    title=f"Goal completed: {goal.description[:50]}",
-                    body=f"Target belief PE dropped below threshold",
-                    cycle=cycle,
-                    related_goals=[gid],
-                ))
+                # Max age exceeded
+                if age > max_age:
+                    self.goal_gen.abandon_goal(gid, f"exceeded max age ({max_age} cycles)")
+                    abandoned_goals.append(gid)
+                    continue
+                # Priority decayed to zero
+                goal.priority = max(0.0, goal.priority - priority_decay)
+                if goal.priority <= 0.0:
+                    self.goal_gen.abandon_goal(gid, "priority decayed to zero")
+                    abandoned_goals.append(gid)
+                    continue
+            else:
+                # EXOGENOUS: no auto-abandon, no priority decay
+                if target is None:
+                    continue
+
+            # --- Complete check (both types, with hysteresis) ---
+            if target is not None and target.pe_history:
+                if target.pe_history[-1] < complete_threshold:
+                    goal._cycles_below_complete += 1
+                    if goal._cycles_below_complete >= hysteresis_required:
+                        self.goal_gen.complete_goal(gid)
+                        completed_goals.append(gid)
+                        self.notifier.push(Notification(
+                            level=NotifyLevel.RESULT,
+                            title=f"Goal completed: {goal.description[:50]}",
+                            body=f"PE below threshold for {hysteresis_required} consecutive cycles",
+                            cycle=cycle,
+                            related_goals=[gid],
+                        ))
+                else:
+                    goal._cycles_below_complete = 0  # reset hysteresis
 
         # PE jump notifications
         for bid, pe in pe_values.items():

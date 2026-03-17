@@ -79,6 +79,8 @@ async def update_belief(belief_id: str, request: Request, data: dict):
         b.statement = data["statement"]
     if "tags" in data:
         b.tags = data["tags"]
+    if "status" in data:
+        b.status = str(data["status"])
 
     return {"action": "updated", "belief_id": belief_id}
 

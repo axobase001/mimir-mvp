@@ -63,7 +63,7 @@ class LLMClient:
         self._total_cost = 0.0
         self._call_count = 0
         self._hourly_timestamps: list[float] = []
-        self.max_calls_per_hour = 10
+        self.max_calls_per_hour = 999999  # no self-imposed limit
 
     def _check_hourly_limit(self) -> None:
         """Enforce max LLM calls per hour."""

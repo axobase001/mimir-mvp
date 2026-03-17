@@ -62,6 +62,15 @@ class MimirConfig:
     scheduler_interval: float = 60.0
     inter_user_delay: float = 2.0
 
+    # Safety caps
+    max_beliefs_per_brain: int = 2000          # soft cap — force prune lowest-confidence when exceeded
+    belief_cap_prune_batch: int = 50           # how many to prune when cap hit
+
+    # Goal health
+    goal_priority_decay: float = 0.02          # priority drops per cycle for ENDOGENOUS goals
+    goal_max_age_cycles: int = 100             # ENDOGENOUS goals auto-abandon after this many cycles
+    goal_hysteresis_buffer: int = 2            # PE must stay below complete threshold for N consecutive cycles
+
     # Belief category parameters
     belief_decay_rates: dict = field(default_factory=lambda: {
         "fact": 0.03,
