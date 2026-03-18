@@ -1,0 +1,62 @@
+[BRAIN TRUTH PACKET]
+{
+  "cycle": 0,
+  "belief_graph": {
+    "total": 1,
+    "sources": {
+      "seed": 1
+    },
+    "dominant_topics": [
+      "skuld",
+      "architecture"
+    ],
+    "top_beliefs": [
+      {
+        "id": "seed_001",
+        "statement": "Skuld是一个Brain-First AI认知系统",
+        "confidence": 0.9,
+        "source": "seed"
+      }
+    ]
+  },
+  "sec": {
+    "total_clusters": 2,
+    "positive_clusters": 2,
+    "negative_clusters": 0,
+    "top_attended": [
+      {
+        "tag": "skuld",
+        "c_value": 0.1
+      },
+      {
+        "tag": "architecture",
+        "c_value": 0.02
+      }
+    ]
+  },
+  "memory": {
+    "total_episodes": 5,
+    "recent": [
+      {
+        "cycle": 0,
+        "action": "fast_path: 你知道自己在聚焦吗",
+        "pe": 0.0
+      },
+      {
+        "cycle": 0,
+        "action": "fast_path: 我是沈晚",
+        "pe": 0.0
+      },
+      {
+        "cycle": 0,
+        "action": "fast_path: SEC对我输入什么反应",
+        "pe": 0.0
+      }
+    ]
+  },
+  "goals": {
+    "active_count": 0,
+    "goals": []
+  }
+}
+[END TRUTH PACKET]

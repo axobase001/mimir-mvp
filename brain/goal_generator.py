@@ -1,3 +1,13 @@
+"""
+SKULD CORE PRINCIPLE
+
+User intent > Brain judgment. Always.
+
+EXOGENOUS goals (user-set) are never auto-abandoned.
+ENDOGENOUS goals (Brain-generated) may be abandoned, decayed, or completed.
+Brain's autonomy operates in the space the user has not claimed.
+"""
+
 from ..types import BeliefCategory, Goal, GoalOrigin, GoalStatus
 from ..config import MimirConfig
 from .belief_graph import BeliefGraph

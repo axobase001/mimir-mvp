@@ -1,4 +1,4 @@
-"""ScheduledTaskManager — time-triggered task execution for Mimir."""
+"""ScheduledTaskManager — time-triggered task execution for Skuld."""
 
 from __future__ import annotations
 

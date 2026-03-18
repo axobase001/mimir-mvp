@@ -7,3 +7,4 @@ PyJWT>=2.8.0
 cryptography>=42.0.0
 aiosmtplib>=3.0.0
 pandas>=2.0.0
+icalendar>=5.0.0

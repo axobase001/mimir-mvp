@@ -18,7 +18,7 @@ class SkillResult:
 
 
 class Skill(ABC):
-    """Base class for all Mimir skills."""
+    """Base class for all Skuld skills."""
 
     def __init__(self) -> None:
         self._outcome_history: list[dict] = []

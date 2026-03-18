@@ -1,4 +1,4 @@
-"""Learning curve benchmark: measure Mimir's improvement over repeated tasks.
+"""Learning curve benchmark: measure Skuld's improvement over repeated tasks.
 
 Uses mock LLM and mock search (no real API calls).
 Outputs CSV and optionally matplotlib charts.

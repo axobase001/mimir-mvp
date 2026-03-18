@@ -1,4 +1,4 @@
-"""BrainScheduler — multi-Brain cycle scheduler for Mimir."""
+"""BrainScheduler — multi-Brain cycle scheduler for Skuld."""
 
 import asyncio
 import logging
@@ -25,6 +25,14 @@ from ..skills.code_exec import CodeExecSkill
 from ..skills.document import DocumentSkill
 from ..skills.web_fetch import WebFetchSkill
 from ..skills.data_analysis import DataAnalysisSkill
+from ..skills.shell_exec import ShellExecSkill
+from ..skills.screenshot import ScreenshotSkill
+from ..skills.calendar_ical import CalendarSkill
+from ..skills.slack_webhook import SlackWebhookSkill
+from ..skills.json_query import JSONQuerySkill
+from ..skills.translate import TranslateSkill
+from ..skills.summarize_url import SummarizeURLSkill
+from ..skills.custom_tool import CustomToolManager
 from ..types import Belief, BeliefSource
 from ..config import MimirConfig
 from ..state import MimirState
@@ -126,6 +134,18 @@ class BrainScheduler:
         registry.register(DocumentSkill())
         registry.register(WebFetchSkill())
         registry.register(DataAnalysisSkill())
+        registry.register(ShellExecSkill())
+        registry.register(ScreenshotSkill())
+        registry.register(CalendarSkill())
+        registry.register(SlackWebhookSkill())
+        registry.register(JSONQuerySkill())
+        registry.register(TranslateSkill(llm_client=llm_client))
+        registry.register(SummarizeURLSkill(llm_client=llm_client))
+
+        # Load user-defined custom tools
+        custom_mgr = CustomToolManager()
+        for custom_skill in custom_mgr.load_tools():
+            registry.register(custom_skill)
 
         action_engine = ActionEngine(
             skill_registry=registry,
@@ -161,6 +181,7 @@ class BrainScheduler:
             "skill_registry": registry,
             "action_engine": action_engine,
             "scheduled_tasks": scheduled_tasks,
+            "custom_tool_manager": custom_mgr,
         }
 
         # Save initial state

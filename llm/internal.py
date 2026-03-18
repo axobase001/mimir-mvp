@@ -26,7 +26,7 @@ class InternalLLM:
         )
 
         try:
-            text = await self.client.complete(system, user)
+            text = await self.client.complete(system, user, caller="reason")
             data = parse_json_response(text)
             if data is None or data.get("result") == "none" or "statement" not in data:
                 return None
@@ -69,7 +69,7 @@ class InternalLLM:
         )
 
         try:
-            text = await self.client.complete(system, user)
+            text = await self.client.complete(system, user, caller="simulate")
             data = parse_json_response(text)
             if not isinstance(data, list):
                 return []
@@ -95,7 +95,7 @@ class InternalLLM:
         )
 
         try:
-            text = await self.client.complete(system, user)
+            text = await self.client.complete(system, user, caller="plan")
             data = parse_json_response(text)
             if isinstance(data, list):
                 return [str(s) for s in data]
@@ -122,7 +122,7 @@ class InternalLLM:
         )
 
         try:
-            text = await self.client.complete(system, user)
+            text = await self.client.complete(system, user, caller="abstract")
             data = parse_json_response(text)
             if data is None or data.get("result") == "none" or "statement" not in data:
                 return None
@@ -180,7 +180,7 @@ class InternalLLM:
             user += f"信念上下文：\n{belief_context}\n"
 
         try:
-            text = await self.client.complete(system, user, temperature=0.1)
+            text = await self.client.complete(system, user, temperature=0.1, caller="plan_action_params")
             data = parse_json_response(text)
             if isinstance(data, dict):
                 return data
@@ -212,7 +212,7 @@ class InternalLLM:
         )
 
         try:
-            text = await self.client.complete(system, user, temperature=0.1)
+            text = await self.client.complete(system, user, temperature=0.1, caller="should_act")
             data = parse_json_response(text)
             if isinstance(data, dict):
                 return (bool(data.get("act", False)), str(data.get("reason", "")))

@@ -1,5 +1,5 @@
 """
-Mimir — Brain-first AI cognitive system (multi-user).
+Skuld — Brain-first AI cognitive system (multi-user).
 
 Usage:
     python -m mimir.main --config config.json
@@ -45,7 +45,7 @@ async def main_async(args: argparse.Namespace) -> None:
     config = build_config(config_data)
 
     # Override config from environment variables
-    jwt_secret = os.environ.get("JWT_SECRET", config.jwt_secret or "mimir-dev-secret-change-me")
+    jwt_secret = os.environ.get("JWT_SECRET", config.jwt_secret or "skuld-dev-secret-change-me")
     config.jwt_secret = jwt_secret
     config.default_llm_key = os.environ.get("LLM_API_KEY", config.default_llm_key or config.llm_api_key)
     config.default_brave_key = os.environ.get("BRAVE_API_KEY", config.default_brave_key or config.brave_api_key)
@@ -81,9 +81,9 @@ async def main_async(args: argparse.Namespace) -> None:
     # ── DEV MODE: auto-create user + brain, bypass auth ──
     seed_beliefs = config_data.get("seed_beliefs", [])
     try:
-        dev_user = user_db.get_user_by_email("dev@mimir.local")
+        dev_user = user_db.get_user_by_email("dev@skuld.local")
         if dev_user is None:
-            dev_user = user_db.create_user("dev@mimir.local", "devdev123", "Dev")
+            dev_user = user_db.create_user("dev@skuld.local", "devdev123", "Dev")
         dev_uid = dev_user["id"]
         app.state._dev_user_id = dev_uid
         scheduler._dev_user_id = dev_uid
@@ -110,7 +110,7 @@ async def main_async(args: argparse.Namespace) -> None:
     uv_config = uvicorn.Config(app, host="0.0.0.0", port=port, log_level="warning")
     server = uvicorn.Server(uv_config)
 
-    log.info("Starting Mimir (multi-user) on http://localhost:%d", port)
+    log.info("Starting Skuld (multi-user) on http://localhost:%d", port)
 
     try:
         await asyncio.gather(
@@ -119,11 +119,11 @@ async def main_async(args: argparse.Namespace) -> None:
         )
     finally:
         scheduler.stop()
-        log.info("Mimir shut down.")
+        log.info("Skuld shut down.")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Mimir")
+    parser = argparse.ArgumentParser(description="Skuld")
     parser.add_argument("--config", required=True)
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--log-level", default="INFO")

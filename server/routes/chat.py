@@ -36,6 +36,7 @@ async def _classify_intent(llm_client, user_msg: str) -> str:
             'Output only JSON: {"type": "query"} or {"type": "action"}',
             f"User message: {user_msg}",
             temperature=0.0,
+            caller="classify_intent",
         )
         data = parse_json_response(text)
         if isinstance(data, dict) and data.get("type") in ("query", "action"):
@@ -52,6 +53,7 @@ async def _extract_tags(llm_client, user_msg: str) -> list[str]:
             'Only output a JSON array: ["tag1", "tag2"]',
             f"User message: {user_msg}",
             temperature=0.0,
+            caller="extract_tags",
         )
         tags = parse_json_response(text)
         return tags if isinstance(tags, list) else []

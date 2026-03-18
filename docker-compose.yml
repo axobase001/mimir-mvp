@@ -1,16 +1,16 @@
 version: "3.8"
 
 services:
-  mimir:
+  skuld:
     build: .
     ports:
       - "8000:8000"
     environment:
-      - JWT_SECRET=${JWT_SECRET:-mimir-production-secret-change-me}
+      - JWT_SECRET=${JWT_SECRET:-skuld-production-secret-change-me}
       - LLM_API_KEY=${LLM_API_KEY:-}
       - BRAVE_API_KEY=${BRAVE_API_KEY:-}
     volumes:
-      - mimir-data:/app/data
+      - skuld-data:/app/data
       - ./config.json:/app/config.json:ro
     restart: unless-stopped
     healthcheck:
@@ -27,8 +27,8 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      - mimir
+      - skuld
     restart: unless-stopped
 
 volumes:
-  mimir-data:
+  skuld-data:

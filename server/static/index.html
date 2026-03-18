@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mimir</title>
+<title>Skuld</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -13,7 +16,10 @@
 <!-- Auth Screen -->
 <div id="auth-screen" style="display:none">
   <div class="auth-container">
-    <h1>Mimir<span>Brain-first AI</span></h1>
+    <div class="auth-brand">
+      <span class="logo">SKULD</span>
+      <span class="logo-sub">BRAIN-FIRST AI</span>
+    </div>
     <div id="auth-error" class="auth-error" style="display:none"></div>
     <form id="auth-form">
       <input id="auth-email" type="email" placeholder="Email" required />
@@ -30,62 +36,107 @@
 
 <!-- Dashboard -->
 <div id="dashboard-screen" style="display:none">
-  <div class="topbar">
-    <h1>Mimir<span>Brain-first AI</span></h1>
-    <div class="stats">
-      <div><div class="stat-val beliefs" id="s-beliefs">0</div><div class="stat-lbl">Beliefs</div></div>
-      <div><div class="stat-val clusters" id="s-clusters">0</div><div class="stat-lbl">SEC Clusters</div></div>
-      <div><div class="stat-val goals" id="s-goals">0</div><div class="stat-lbl">Goals</div></div>
-      <div><div class="stat-val" id="s-cycle">0</div><div class="stat-lbl">Cycle</div></div>
-      <div><div class="stat-val cost" id="s-cost">$0</div><div class="stat-lbl">Cost</div></div>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="logo">SKULD</span>
+      <span class="logo-sub">BRAIN-FIRST AI</span>
     </div>
-    <div class="user-info">
+    <div class="topbar-center">
+      <div class="stat-badge">Cycle <span id="s-cycle">0</span></div>
+      <div class="stat-badge stat-beliefs">Beliefs <span id="s-beliefs">0</span></div>
+      <div class="stat-badge stat-sec">SEC <span id="s-clusters">0</span></div>
+      <div class="stat-badge stat-goals">Goals <span id="s-goals">0</span></div>
+      <div class="stat-badge stat-cost">$<span id="s-cost">0</span></div>
+    </div>
+    <div class="topbar-right">
       <span id="user-display-name"></span>
       <span id="user-plan" class="plan-badge"></span>
       <button id="logout-btn" onclick="logout()">Logout</button>
     </div>
-  </div>
+  </header>
 
-  <div class="grid">
-    <div class="panel" id="graph-panel">
-      <div class="panel-title">Belief Graph</div>
+  <!-- Main grid -->
+  <main class="dashboard-grid">
+    <!-- Left: Belief Graph -->
+    <section class="panel panel-graph" id="graph-panel">
+      <div class="panel-header">
+        <h2>Belief Graph</h2>
+        <div class="panel-legend">
+          <span class="legend-dot fact"></span><span class="legend-label">Fact</span>
+          <span class="legend-dot preference"></span><span class="legend-label">Preference</span>
+          <span class="legend-dot procedure"></span><span class="legend-label">Procedure</span>
+          <span class="legend-dot hypothesis"></span><span class="legend-label">Hypothesis</span>
+        </div>
+      </div>
       <svg id="graph-svg"></svg>
-    </div>
+    </section>
 
-    <div class="panel" id="sec-panel">
-      <div class="panel-title">SEC Matrix (C values)</div>
+    <!-- Right top: SEC Matrix -->
+    <section class="panel panel-sec" id="sec-panel">
+      <div class="panel-header">
+        <h2>SEC Attention Matrix</h2>
+        <span class="panel-badge" id="sec-pos-neg">0+ / 0&minus;</span>
+      </div>
       <canvas id="sec-chart"></canvas>
-    </div>
+    </section>
 
-    <div class="panel" id="chat-panel">
-      <div class="panel-title">Chat</div>
-      <div id="chat-messages"></div>
-      <div id="chat-input-wrap">
-        <input id="chat-input" placeholder="Ask Mimir..." />
-        <button id="chat-send">Send</button>
+    <!-- Right middle: Goals -->
+    <section class="panel panel-goals" id="goals-panel">
+      <div class="panel-header">
+        <h2>Goals</h2>
+        <button class="btn-small" onclick="toggleGoalForm()">+ Add</button>
       </div>
-    </div>
-
-    <div class="panel" id="goals-panel">
-      <div class="panel-title">Goals</div>
       <div id="goals-list"></div>
-      <div id="add-goal-form">
+      <div id="add-goal-form" style="display:none">
         <input id="new-goal-input" placeholder="New goal..." />
-        <button onclick="addGoal()">Add</button>
+        <button onclick="addGoal()">Create</button>
       </div>
-    </div>
+    </section>
 
-    <div class="panel" id="log-panel">
-      <div class="panel-title">Cycle Log</div>
-      <div id="log-list"></div>
+    <!-- Right bottom: Stats -->
+    <section class="panel panel-stats" id="stats-panel">
+      <div class="panel-header"><h2>Learning Curve</h2></div>
+      <canvas id="learning-chart"></canvas>
+      <div class="stats-row" id="learning-stats"></div>
+      <div class="stats-row">
+        <span>Last deep cycle: <span id="last-cycle-time">&mdash;</span></span>
+      </div>
+    </section>
+  </main>
+
+  <!-- Chat toggle button -->
+  <button class="chat-toggle" id="chat-toggle" onclick="toggleChat()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2h12v9H4l-2 2V2z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    Chat
+  </button>
+
+  <!-- Chat drawer -->
+  <div class="chat-drawer" id="chat-drawer">
+    <div class="chat-header">
+      <h3>Chat with Skuld</h3>
+      <button class="chat-close-btn" onclick="toggleChat()">&times;</button>
+    </div>
+    <div id="chat-messages"></div>
+    <div class="chat-input-row">
+      <input id="chat-input" placeholder="Ask Skuld..." />
+      <button id="chat-send">Send</button>
     </div>
   </div>
 
+  <!-- Detail overlay -->
   <div id="detail-overlay">
-    <span id="detail-close" onclick="closeDetail()">&times;</span>
-    <div id="detail-content"></div>
+    <div id="detail-backdrop" onclick="closeDetail()"></div>
+    <div id="detail-dialog">
+      <span id="detail-close" onclick="closeDetail()">&times;</span>
+      <div id="detail-content"></div>
+    </div>
   </div>
 
+  <!-- Tooltip for graph nodes -->
+  <div id="graph-tooltip" class="graph-tooltip"></div>
+
+  <!-- Notifications -->
   <div id="notifications"></div>
 </div>
 

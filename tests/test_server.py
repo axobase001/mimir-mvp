@@ -158,7 +158,7 @@ def test_root_serves_html():
     client, _, _, _ = get_client()
     r = client.get("/")
     assert r.status_code == 200
-    assert "Mimir" in r.text
+    assert "Skuld" in r.text or "SKULD" in r.text
 
 
 def test_auth_register_login():

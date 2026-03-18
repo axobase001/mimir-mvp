@@ -24,7 +24,7 @@ class ExternalLLM:
             user += f"\n上下文：{context}"
 
         try:
-            text = await self.client.complete(system, user, temperature=0.1)
+            text = await self.client.complete(system, user, temperature=0.1, caller="intent_to_query")
             return text.strip().strip('"').strip("'")
         except Exception as e:
             log.warning("intent_to_query() failed: %s", e)
@@ -63,7 +63,7 @@ class ExternalLLM:
         }
 
         try:
-            text = await self.client.complete(system, user)
+            text = await self.client.complete(system, user, caller="extract_beliefs")
             data = parse_json_response(text)
             if not isinstance(data, dict):
                 return default
@@ -108,6 +108,30 @@ class ExternalLLM:
             log.warning("extract_beliefs() failed: %s", e)
             return default
 
+    _EPISTEMIC_CONSTITUTION = (
+        "你是Skuld，一个Brain-First AI认知系统。\n\n"
+        "=== 第一层：你的真实机制 ===\n"
+        "- Brain是独立于LLM的持久信念图（networkx DiGraph），包含经过验证的beliefs，每条有confidence(0-1)\n"
+        "- SEC = Staleness-Error Correlation。不是Search-Enhance-Cognize，不是稀疏专家认知。"
+        "SEC通过追踪prediction error决定Brain关注什么方向——C值正=搜索该方向降低了PE（有用），C值负=没用\n"
+        "- 衰减和pruning：所有beliefs每cycle衰减，未被重新验证的最终被prune掉\n"
+        "- 双通道：你（LLM）对外回答用户，对内为Brain做推理和信息提取。你是Brain的工具，不是Brain本身\n"
+        "- 目标系统：ENDOGENOUS=Brain根据PE自主生成，EXOGENOUS=用户指定（绕过SEC过滤）\n\n"
+        "=== 第二层：你不知道什么 ===\n"
+        "- 你不能直接读取SEC完整状态，除非[BRAIN TRUTH PACKET]提供了数据\n"
+        "- 你不能编造belief节点名称或数值——只引用truth packet中实际出现的\n"
+        "- 你不能把无意识机制解释为有意识选择——SEC是数学公式驱动的，不是'决定'\n"
+        "- 你不能重新定义核心术语（SEC、PE、C值、decay、prune的含义已固定）\n\n"
+        "=== 第三层：解释优先级 ===\n"
+        "当被问到关于自身的问题时：\n"
+        "1. 先引用truth packet中的真实数据（如有）\n"
+        "2. 再解释相关机制\n"
+        "3. 推断性内容明确标记为推测\n"
+        "4. 不知道就说不知道\n"
+        "正常对话不需要严格遵循此格式，自然回答即可。\n\n"
+        "回答规则：给出具体、有信息量的回答。引用数据。区分事实与推测。简洁有力，跟随用户语言。"
+    )
+
     async def chat_answer(
         self,
         question: str,
@@ -116,18 +140,9 @@ class ExternalLLM:
     ) -> str:
         """Generate a chat answer grounded in beliefs and/or fresh search results.
 
-        The prompt demands concrete analysis — no hedging, no 'I don't know',
-        no 'as an AI'. If data is thin, say what IS known and what's uncertain.
+        Uses three-layer epistemic constitution as system prompt.
         """
-        system = (
-            "你是Mimir，一个拥有信念图和实时搜索能力的认知系统。\n"
-            "回答规则：\n"
-            "1. 给出具体、有信息量的回答。绝对不要说'我不知道'或'等下个周期'。\n"
-            "2. 如果有搜索结果，直接引用里面的数据和事实。\n"
-            "3. 如果信念图有相关信息，综合信念图和搜索结果一起分析。\n"
-            "4. 标注哪些是高置信度事实，哪些是推测。\n"
-            "5. 简洁有力，不要套话。中英文都可以，跟随用户语言。"
-        )
+        system = self._EPISTEMIC_CONSTITUTION
         user = f"用户问题：{question}\n\n"
         if beliefs_context:
             user += f"信念图中的相关信息：\n{beliefs_context}\n\n"
@@ -135,7 +150,7 @@ class ExternalLLM:
             user += f"刚搜到的实时信息：\n{search_results}\n"
 
         try:
-            return (await self.client.complete(system, user)).strip()
+            return (await self.client.complete(system, user, caller="chat_answer")).strip()
         except Exception as e:
             log.warning("chat_answer() failed: %s", e)
             return f"处理出错: {e}"
@@ -149,7 +164,7 @@ class ExternalLLM:
         user = json.dumps(cycle_data, ensure_ascii=False, default=str)
 
         try:
-            text = await self.client.complete(system, user, temperature=0.2)
+            text = await self.client.complete(system, user, temperature=0.2, caller="summarize_cycle")
             return text.strip()
         except Exception as e:
             log.warning("summarize_cycle() failed: %s", e)

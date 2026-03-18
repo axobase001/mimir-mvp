@@ -1,4 +1,4 @@
-"""SQLite user database for Mimir multi-user support."""
+"""SQLite user database for Skuld multi-user support."""
 
 import sqlite3
 import uuid

@@ -1,5 +1,18 @@
 """ActionEngine — plan and execute skill-based actions.
 
+SKULD CORE PRINCIPLE
+
+User intent > Brain judgment. Always.
+
+Brain may explain its reasoning. Brain may suggest alternatives.
+Brain executes user commands faithfully regardless of its own
+assessment. EXOGENOUS goals bypass SEC filtering. User overrides
+are immediate and non-negotiable.
+
+Brain's autonomy operates in the space the user has not claimed.
+
+---
+
 Supports both single-step and multi-step task execution.
 Multi-step: LLM decomposes intent → ordered step list → sequential execution.
 Each step's output is fed as context to the next step.
@@ -93,6 +106,7 @@ class ActionEngine:
                     '只输出JSON：{"skill": "工具名"}',
                     f"用户意图：{intent}\n\n可用工具：\n{skill_list}",
                     temperature=0.0,
+                    caller="skill_selection",
                 )
                 llm_choice = parse_json_response(llm_text)
                 if isinstance(llm_choice, dict) and llm_choice.get("skill"):
@@ -213,6 +227,7 @@ class ActionEngine:
                 f"用户意图：{intent}\n\n可用工具：\n{skill_list}\n\n"
                 f"上下文：{belief_context[:500] if belief_context else '无'}",
                 temperature=0.1,
+                caller="multistep_plan",
             )
             raw_steps = parse_json_response(text)
             if not isinstance(raw_steps, list) or not raw_steps:

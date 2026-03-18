@@ -155,6 +155,35 @@ async def get_cycle_log(request: Request, last_n: int = 20):
     ]}
 
 
+@router.get("/api/metrics/llm_calls")
+async def get_llm_call_metrics(request: Request):
+    """Return per-caller LLM call stats, fast_path hit rate, and recent call log."""
+    user_id, engine, state = _get_user_brain(request)
+    llm_client = state["llm_client"]
+
+    # Per-caller aggregated stats
+    caller_stats = llm_client.get_caller_stats()
+
+    # Fast path hit/miss from cycle engine
+    hits = engine.fast_path_hits
+    misses = engine.fast_path_misses
+    total = hits + misses
+    hit_rate = hits / total if total > 0 else 0.0
+
+    # Recent per-call log (last 50)
+    call_log = llm_client.get_call_log(last_n=50)
+
+    return {
+        "caller_stats": caller_stats,
+        "fast_path": {
+            "hits": hits,
+            "misses": misses,
+            "hit_rate": round(hit_rate, 4),
+        },
+        "call_log": call_log,
+    }
+
+
 @router.get("/api/metrics/learning_curve")
 async def get_learning_curve(request: Request):
     """Return learning curve metrics extracted from cycle logs."""

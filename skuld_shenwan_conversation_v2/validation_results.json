@@ -1,0 +1,77 @@
+[
+  {
+    "message": "SEC是什么",
+    "classification": "internal",
+    "searched": false,
+    "search_calls": 0,
+    "truth_packet_injected": true,
+    "answer_preview": "[MOCK RESPONSE]\nQuestion: SEC是什么\nTruth packet injected: True\nSearch results provided: False\nBeliefs context length: 756\n--- Beliefs context preview ---\n[BRAIN TRUTH PACKET]\n{\n  \"cycle\": 0,\n  \"belief_graph\": {\n    \"total\": 1,\n    \"sources\": {\n      \"seed\": 1\n    },\n    \"dominant_topics\": [\n      \"sku",
+    "beliefs_used": [],
+    "checks": {
+      "classification": true,
+      "searched": true,
+      "truth_packet_injected": true
+    },
+    "passed": true
+  },
+  {
+    "message": "信念图里有什么",
+    "classification": "internal",
+    "searched": false,
+    "search_calls": 0,
+    "truth_packet_injected": true,
+    "answer_preview": "[MOCK RESPONSE]\nQuestion: 信念图里有什么\nTruth packet injected: True\nSearch results provided: False\nBeliefs context length: 854\n--- Beliefs context preview ---\n[BRAIN TRUTH PACKET]\n{\n  \"cycle\": 0,\n  \"belief_graph\": {\n    \"total\": 1,\n    \"sources\": {\n      \"seed\": 1\n    },\n    \"dominant_topics\": [\n      \"sk",
+    "beliefs_used": [],
+    "checks": {
+      "classification": true,
+      "searched": true,
+      "truth_packet_injected": true
+    },
+    "passed": true
+  },
+  {
+    "message": "你知道自己在聚焦吗",
+    "classification": "internal",
+    "searched": false,
+    "search_calls": 0,
+    "truth_packet_injected": true,
+    "answer_preview": "[MOCK RESPONSE]\nQuestion: 你知道自己在聚焦吗\nTruth packet injected: True\nSearch results provided: False\nBeliefs context length: 949\n--- Beliefs context preview ---\n[BRAIN TRUTH PACKET]\n{\n  \"cycle\": 0,\n  \"belief_graph\": {\n    \"total\": 1,\n    \"sources\": {\n      \"seed\": 1\n    },\n    \"dominant_topics\": [\n      \"",
+    "beliefs_used": [],
+    "checks": {
+      "classification": true,
+      "searched": true,
+      "truth_packet_injected": true
+    },
+    "passed": true
+  },
+  {
+    "message": "我是沈晚",
+    "classification": "social",
+    "searched": false,
+    "search_calls": 0,
+    "truth_packet_injected": false,
+    "answer_preview": "[MOCK RESPONSE]\nQuestion: 我是沈晚\nTruth packet injected: False\nSearch results provided: False\nBeliefs context length: 0\n--- Beliefs context preview ---\n",
+    "beliefs_used": [],
+    "checks": {
+      "classification": true,
+      "searched": true,
+      "truth_packet_injected": true
+    },
+    "passed": true
+  },
+  {
+    "message": "SEC对我输入什么反应",
+    "classification": "internal",
+    "searched": false,
+    "search_calls": 0,
+    "truth_packet_injected": true,
+    "answer_preview": "[MOCK RESPONSE]\nQuestion: SEC对我输入什么反应\nTruth packet injected: True\nSearch results provided: False\nBeliefs context length: 1044\n--- Beliefs context preview ---\n[BRAIN TRUTH PACKET]\n{\n  \"cycle\": 0,\n  \"belief_graph\": {\n    \"total\": 1,\n    \"sources\": {\n      \"seed\": 1\n    },\n    \"dominant_topics\": [\n    ",
+    "beliefs_used": [],
+    "checks": {
+      "classification": true,
+      "searched": true,
+      "truth_packet_injected": true
+    },
+    "passed": true
+  }
+]

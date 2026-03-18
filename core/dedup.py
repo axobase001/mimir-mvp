@@ -37,7 +37,7 @@ class BeliefDeduplicator:
         )
 
         try:
-            text = await self.client.complete(system, user, temperature=0.0)
+            text = await self.client.complete(system, user, temperature=0.0, caller="dedup")
             data = parse_json_response(text)
             if data and data.get("duplicate"):
                 match_id = data.get("match_id")

@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mimir - Setup</title>
+<title>Skuld - Setup</title>
 <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
 <div class="onboarding-container">
-  <h1>Mimir<span>Setup Your Brain</span></h1>
+  <h1>Skuld<span>Setup Your Brain</span></h1>
   <p class="onboarding-subtitle">Choose a template or create custom seed beliefs to get started.</p>
 
   <div id="onboarding-error" class="auth-error" style="display:none"></div>
@@ -47,7 +47,7 @@
 
   <!-- Launch button -->
   <div id="step-launch" style="display:none">
-    <button id="launch-btn" class="launch-btn" onclick="launchMimir()">Start Mimir</button>
+    <button id="launch-btn" class="launch-btn" onclick="launchSkuld()">Start Skuld</button>
   </div>
 </div>
 
@@ -127,7 +127,7 @@ function removeSeedBelief(index) {
   renderBeliefs();
 }
 
-async function launchMimir() {
+async function launchSkuld() {
   const errEl = document.getElementById('onboarding-error');
   errEl.style.display = 'none';
 

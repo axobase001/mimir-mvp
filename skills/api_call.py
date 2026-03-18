@@ -1,4 +1,4 @@
-"""GenericAPISkill — universal HTTP API caller for Mimir.
+"""GenericAPISkill — universal HTTP API caller for Skuld.
 
 Allows users to hit any REST endpoint without writing a dedicated skill.
 """

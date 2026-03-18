@@ -11,6 +11,14 @@ from .data_analysis import DataAnalysisSkill
 from .pdf_read import PDFReadSkill
 from .api_call import GenericAPISkill
 from .openclaw_adapter import OpenClawAdapter, WrappedOpenClawSkill
+from .shell_exec import ShellExecSkill
+from .screenshot import ScreenshotSkill
+from .calendar_ical import CalendarSkill
+from .slack_webhook import SlackWebhookSkill
+from .json_query import JSONQuerySkill
+from .translate import TranslateSkill
+from .summarize_url import SummarizeURLSkill
+from .custom_tool import CustomToolManager
 
 __all__ = [
     "Skill",
@@ -30,4 +38,12 @@ __all__ = [
     "GenericAPISkill",
     "OpenClawAdapter",
     "WrappedOpenClawSkill",
+    "ShellExecSkill",
+    "ScreenshotSkill",
+    "CalendarSkill",
+    "SlackWebhookSkill",
+    "JSONQuerySkill",
+    "TranslateSkill",
+    "SummarizeURLSkill",
+    "CustomToolManager",
 ]

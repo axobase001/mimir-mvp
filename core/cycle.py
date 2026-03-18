@@ -1,6 +1,22 @@
+"""
+SKULD CORE PRINCIPLE
+
+User intent > Brain judgment. Always.
+
+Brain may explain its reasoning. Brain may suggest alternatives.
+Brain executes user commands faithfully regardless of its own
+assessment. EXOGENOUS goals bypass SEC filtering. User overrides
+are immediate and non-negotiable.
+
+Brain's autonomy operates in the space the user has not claimed.
+"""
+
 import asyncio
+import json
 import logging
 import random
+import re
+from collections import Counter
 
 from ..brain.belief_graph import BeliefGraph
 from ..brain.sec_matrix import SECMatrix
@@ -49,6 +65,8 @@ class MimirCycle:
         self.ws_manager = ws_manager
         self.action_engine = action_engine
         self.cycle_count = 0
+        self.fast_path_hits = 0
+        self.fast_path_misses = 0
 
     # ──────────────────────────────────────
     #  Helpers
@@ -214,6 +232,148 @@ class MimirCycle:
                 log.warning("should_act check failed: %s", e)
 
         return False, "no_trigger"
+
+    # ──────────────────────────────────────
+    #  Message classification & truth packet
+    # ──────────────────────────────────────
+
+    _INTERNAL_PATTERNS: list[re.Pattern] = [
+        re.compile(p, re.IGNORECASE) for p in [
+            r"你的信念图", r"信念图里", r"你的SEC", r"SEC矩阵", r"SEC是什么",
+            r"SEC对.+反应", r"SEC怎么",
+            r"你知道自己", r"你在聚焦", r"你的架构", r"你怎么工作", r"你怎么思考",
+            r"你为什么", r"你知道", r"你怎么",
+            r"belief.?graph", r"your beliefs", r"your SEC",
+            r"how do you work", r"what do you know about yourself",
+            r"staleness.error", r"prediction error",
+        ]
+    ]
+    _SOCIAL_PATTERNS: list[re.Pattern] = [
+        re.compile(p, re.IGNORECASE) for p in [
+            r"^你好", r"^hello", r"^hi\b", r"^hey\b", r"^嗨",
+            r"^我是\S+$", r"^我叫", r"^谢谢", r"^thanks",
+            r"^再见", r"^bye", r"^自我介绍",
+        ]
+    ]
+    _MIXED_PATTERNS: list[re.Pattern] = [
+        re.compile(p, re.IGNORECASE) for p in [
+            r"你对.+的看法", r"你觉得.+怎么样", r"你怎么看.+",
+            r"what do you think about", r"your opinion on",
+        ]
+    ]
+
+    def _classify_message(self, query: str) -> str:
+        """Classify user message into internal/social/mixed/external.
+
+        Uses rule-based matching only (no LLM call).
+        Returns one of: "internal", "social", "mixed", "external".
+        """
+        q = query.strip()
+
+        # Check MIXED first (has both internal + external reference)
+        for pat in self._MIXED_PATTERNS:
+            if pat.search(q):
+                return "mixed"
+
+        # Check INTERNAL
+        for pat in self._INTERNAL_PATTERNS:
+            if pat.search(q):
+                return "internal"
+
+        # Check SOCIAL
+        for pat in self._SOCIAL_PATTERNS:
+            if pat.search(q):
+                return "social"
+
+        return "external"
+
+    def _build_truth_packet(self) -> str:
+        """Build a standardized truth packet from current Brain state.
+
+        Pure memory read — no LLM calls. Returns JSON wrapped in markers.
+        """
+        # --- Belief graph stats ---
+        all_beliefs = self.bg.get_all_beliefs()
+        belief_count = len(all_beliefs)
+
+        # Dominant topics: tag frequency top 3
+        tag_counter: Counter = Counter()
+        for b in all_beliefs:
+            for t in b.tags:
+                tag_counter[t] += 1
+        dominant_topics = [tag for tag, _ in tag_counter.most_common(3)]
+
+        # Source breakdown
+        sources: dict[str, int] = {}
+        for b in all_beliefs:
+            sources[b.source.value] = sources.get(b.source.value, 0) + 1
+
+        # Top beliefs by confidence
+        top_beliefs = sorted(all_beliefs, key=lambda x: x.confidence, reverse=True)[:5]
+        top_beliefs_list = [
+            {"id": b.id, "statement": b.statement[:80], "confidence": round(b.confidence, 3),
+             "source": b.source.value}
+            for b in top_beliefs
+        ]
+
+        # --- SEC stats ---
+        mature_entries = [
+            (name, e) for name, e in self.sec.entries.items()
+            if e.obs_count >= 2 and e.not_count >= 2
+        ]
+        pos_clusters = sum(1 for _, e in mature_entries if e.c_value > 0.01)
+        neg_clusters = sum(1 for _, e in mature_entries if e.c_value < -0.01)
+
+        # Top 3 attended tags by absolute C value
+        sorted_sec = sorted(mature_entries, key=lambda x: abs(x[1].c_value), reverse=True)[:3]
+        top_attended = [
+            {"tag": name, "c_value": round(e.c_value, 4)} for name, e in sorted_sec
+        ]
+
+        # --- Memory stats ---
+        recent_episodes = self.mem.episodes[-3:] if self.mem.episodes else []
+        recent_cycles = [
+            {"cycle": ep.cycle, "action": ep.action[:60], "pe": round(ep.pe_before, 4)}
+            for ep in recent_episodes
+        ]
+
+        # --- Goals ---
+        active_goals = [
+            g for g in self.goal_gen.goals.values()
+            if g.status == GoalStatus.ACTIVE
+        ]
+        goals_list = [
+            {"origin": g.origin.value, "description": g.description[:60],
+             "priority": round(g.priority, 3)}
+            for g in active_goals
+        ]
+
+        packet = {
+            "cycle": self.cycle_count,
+            "belief_graph": {
+                "total": belief_count,
+                "sources": sources,
+                "dominant_topics": dominant_topics,
+                "top_beliefs": top_beliefs_list,
+            },
+            "sec": {
+                "total_clusters": len(self.sec.entries),
+                "positive_clusters": pos_clusters,
+                "negative_clusters": neg_clusters,
+                "top_attended": top_attended,
+            },
+            "memory": {
+                "total_episodes": len(self.mem.episodes),
+                "recent": recent_cycles,
+            },
+            "goals": {
+                "active_count": len(active_goals),
+                "goals": goals_list,
+            },
+        }
+
+        packet_json = json.dumps(packet, ensure_ascii=False, indent=2)
+        return f"[BRAIN TRUTH PACKET]\n{packet_json}\n[END TRUTH PACKET]"
 
     # ──────────────────────────────────────
     #  Main cycle
@@ -647,9 +807,16 @@ class MimirCycle:
         """Fast path for user queries: belief retrieval + optional instant search.
 
         Skips predict/SEC/goal/prune/reasoning. Target: 2-5 seconds.
-        Returns {"answer": str, "beliefs_used": list, "searched": bool}.
+        Returns {"answer": str, "beliefs_used": list, "searched": bool,
+                 "classification": str}.
         """
         cycle = self.cycle_count  # Use current cycle, don't increment
+
+        # 0. Classify message and build truth packet
+        classification = self._classify_message(user_query)
+        truth_packet = self._build_truth_packet()  # always generated
+
+        log.info("Fast path classify: %s for query: %s", classification, user_query[:60])
 
         # 1. Extract relevant beliefs by keyword matching
         query_words = [w.lower() for w in user_query.split() if len(w) > 2]
@@ -670,14 +837,19 @@ class MimirCycle:
         search_results = ""
 
         if high_conf:
+            self.fast_path_hits += 1
             beliefs_ctx = "\n".join(
                 f"- [{b.id}] (conf={b.confidence:.2f}) {b.statement}"
                 for b in sorted(high_conf, key=lambda x: x.confidence, reverse=True)[:5]
             )
         else:
-            # 3. No high-confidence match: instant search
+            self.fast_path_misses += 1
+
+            # 3. Search routing based on classification
+            should_search = classification in ("external", "mixed")
+
             search_skill = self.skills.get("brave_search")
-            if search_skill is not None:
+            if search_skill is not None and should_search:
                 try:
                     query = await self.external.intent_to_query(user_query)
                     result = await search_skill.execute({"query": query})
@@ -715,10 +887,14 @@ class MimirCycle:
                 except Exception as e:
                     log.warning("Fast path search failed: %s", e)
 
-        # 4. Generate answer
+        # 4. Generate answer — inject truth packet for internal/mixed only
+        full_beliefs_ctx = beliefs_ctx
+        if classification in ("internal", "mixed"):
+            full_beliefs_ctx = truth_packet + "\n" + beliefs_ctx
+
         answer = await self.external.chat_answer(
             question=user_query,
-            beliefs_context=beliefs_ctx,
+            beliefs_context=full_beliefs_ctx,
             search_results=search_results,
         )
 
@@ -736,6 +912,7 @@ class MimirCycle:
             "answer": answer,
             "beliefs_used": [b.id for b in high_conf[:5]],
             "searched": searched,
+            "classification": classification,
         }
 
     async def run(

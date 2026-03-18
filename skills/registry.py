@@ -96,6 +96,18 @@ class SmartSkillRegistry:
             "文档": "write_document format_text",
             "markdown": "write_document generate_report",
             "csv": "csv_processing analyze_data",
+            "命令": "run_command system_admin",
+            "shell": "run_command system_admin deployment",
+            "部署": "deployment system_admin run_command",
+            "截图": "capture_screenshot visual_inspect webpage_preview",
+            "screenshot": "capture_screenshot visual_inspect",
+            "日历": "read_calendar create_event list_events schedule",
+            "日程": "read_calendar create_event schedule",
+            "slack": "send_message notify_team slack_notification",
+            "通知": "notify_team send_message slack_notification",
+            "json": "query_json filter_data transform_json",
+            "翻译": "translate_text language_conversion localize",
+            "translate": "translate_text language_conversion",
         }
         expanded_intent = intent_lower
         for zh_key, en_caps in _keyword_map.items():

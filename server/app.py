@@ -6,9 +6,10 @@ from collections import defaultdict
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from .routes import dashboard, chat, beliefs, goals, ws
+from .routes import dashboard, chat, beliefs, goals, ws, tools
 from .routes import onboarding
 from .auth.routes import router as auth_router
 from .auth.jwt import verify_token
@@ -17,8 +18,15 @@ log = logging.getLogger(__name__)
 
 _STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
 
-app = FastAPI(title="Mimir", version="0.2.0")
+app = FastAPI(title="Skuld", version="0.2.0")
 
+# ── CORS ─────────────────────────────────────────────
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ── Auth Middleware ──────────────────────────────────
 
@@ -31,8 +39,15 @@ class AuthMiddleware(BaseHTTPMiddleware):
         path = request.url.path
 
         # ── DEV MODE: bypass auth, inject default user ──
+        # But if a valid Bearer token is present, respect it (multi-user support)
         _dev_uid = getattr(request.app.state, "_dev_user_id", None)
         if _dev_uid:
+            auth_header = request.headers.get("Authorization", "")
+            if auth_header.startswith("Bearer "):
+                token_uid = verify_token(auth_header[7:])
+                if token_uid and token_uid != _dev_uid:
+                    request.state.user_id = token_uid
+                    return await call_next(request)
             request.state.user_id = _dev_uid
             return await call_next(request)
 
@@ -121,6 +136,7 @@ app.include_router(dashboard.router)
 app.include_router(chat.router)
 app.include_router(beliefs.router)
 app.include_router(goals.router)
+app.include_router(tools.router)
 app.include_router(ws.router)
 
 app.mount("/static", StaticFiles(directory=_STATIC_DIR), name="static")

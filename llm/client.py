@@ -64,6 +64,9 @@ class LLMClient:
         self._call_count = 0
         self._hourly_timestamps: list[float] = []
         self.max_calls_per_hour = 999999  # no self-imposed limit
+        # Per-call instrumentation
+        self._call_log: list[dict] = []
+        self._max_call_log = 2000
 
     def _check_hourly_limit(self) -> None:
         """Enforce max LLM calls per hour."""
@@ -84,8 +87,13 @@ class LLMClient:
         user_prompt: str,
         temperature: float | None = None,
         max_tokens: int | None = None,
+        caller: str = "unknown",
     ) -> str:
-        """Send chat completion request with retry."""
+        """Send chat completion request with retry.
+
+        caller: identifies who called this (e.g. 'intent_to_query', 'extract_beliefs',
+        'chat_answer', 'reason', 'classify_intent', 'dedup', etc.)
+        """
         self._check_hourly_limit()
         payload = {
             "model": self.model,
@@ -123,6 +131,20 @@ class LLMClient:
                 self._total_cost += (pt * pricing["input"] + ct * pricing["output"]) / 1_000_000
                 self._call_count += 1
 
+                # Per-call log
+                import time as _t
+                self._call_log.append({
+                    "caller": caller,
+                    "prompt_tokens": pt,
+                    "completion_tokens": ct,
+                    "prompt_len": len(system_prompt) + len(user_prompt),
+                    "system_len": len(system_prompt),
+                    "user_len": len(user_prompt),
+                    "timestamp": _t.time(),
+                })
+                if len(self._call_log) > self._max_call_log:
+                    self._call_log = self._call_log[-self._max_call_log:]
+
                 content = data["choices"][0]["message"]["content"]
                 return content or ""
 
@@ -141,3 +163,24 @@ class LLMClient:
             "completion_tokens": self._total_completion_tokens,
             "estimated_cost_usd": round(self._total_cost, 6),
         }
+
+    def get_call_log(self, last_n: int = 100) -> list[dict]:
+        """Return last N per-call records."""
+        return self._call_log[-last_n:]
+
+    def get_caller_stats(self) -> dict:
+        """Aggregate stats by caller name."""
+        stats: dict[str, dict] = {}
+        for entry in self._call_log:
+            c = entry["caller"]
+            if c not in stats:
+                stats[c] = {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "total_prompt_chars": 0}
+            stats[c]["calls"] += 1
+            stats[c]["prompt_tokens"] += entry["prompt_tokens"]
+            stats[c]["completion_tokens"] += entry["completion_tokens"]
+            stats[c]["total_prompt_chars"] += entry["prompt_len"]
+        # Add averages
+        for c, s in stats.items():
+            s["avg_prompt_tokens"] = s["prompt_tokens"] // max(s["calls"], 1)
+            s["avg_prompt_chars"] = s["total_prompt_chars"] // max(s["calls"], 1)
+        return stats

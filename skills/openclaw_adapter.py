@@ -1,4 +1,4 @@
-"""OpenClaw Adapter — scan and wrap external OpenClaw skills into Mimir."""
+"""OpenClaw Adapter — scan and wrap external OpenClaw skills into Skuld."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 
 class WrappedOpenClawSkill(Skill):
-    """Wraps an external OpenClaw skill module into Mimir's Skill interface."""
+    """Wraps an external OpenClaw skill module into Skuld's Skill interface."""
 
     def __init__(
         self,
@@ -70,7 +70,7 @@ class WrappedOpenClawSkill(Skill):
 
 
 class OpenClawAdapter:
-    """Scan OpenClaw skill directories and dynamically wrap them as Mimir Skills."""
+    """Scan OpenClaw skill directories and dynamically wrap them as Skuld Skills."""
 
     def __init__(self, skill_dirs: list[str] | None = None) -> None:
         self._skill_dirs: list[Path] = []

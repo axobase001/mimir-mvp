@@ -62,7 +62,7 @@ class WebFetchSkill(Skill):
                 max_redirects=5,
             ) as client:
                 resp = await client.get(url, headers={
-                    "User-Agent": "Mimir/1.0 (cognitive agent)",
+                    "User-Agent": "Skuld/1.0 (cognitive agent)",
                 })
                 resp.raise_for_status()
 
