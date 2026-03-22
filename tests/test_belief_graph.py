@@ -1,7 +1,7 @@
 import json
 
 from mimir.brain.belief_graph import BeliefGraph
-from mimir.types import Belief, BeliefSource
+from mimir.dtypes import Belief, BeliefSource
 from mimir.config import MimirConfig
 
 

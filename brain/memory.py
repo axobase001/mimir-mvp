@@ -1,6 +1,6 @@
 from typing import Optional
 
-from ..types import Episode, Procedure
+from ..dtypes import Episode, Procedure
 from ..config import MimirConfig
 
 

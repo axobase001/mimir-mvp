@@ -1,0 +1,1047 @@
+{
+  "total": 52,
+  "cycle": 65,
+  "nodes": [
+    {
+      "id": "belief_038",
+      "statement": "Cloud computing costs showed a 0.6% month-over-month increase in January according to BLS Producer Price Index",
+      "confidence": 0.95,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 6,
+      "last_updated": 6,
+      "last_verified": 65,
+      "tags": [
+        "cloud computing",
+        "costs",
+        "inflation",
+        "PPI"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_077",
+      "statement": "根据IDC数据，全球人工智能IT总投资规模预计从2022年的1288亿美元增长到2027年的4236亿美元，五年复合增长率（CAGR）约为26.9%。",
+      "confidence": 0.95,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 36,
+      "last_updated": 36,
+      "last_verified": 65,
+      "tags": [
+        "IDC",
+        "全球人工智能IT总投资",
+        "CAGR",
+        "2022-2027"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_078",
+      "statement": "根据IDC数据，全球人工智能（AI）IT总投资规模预计从2024年的3158亿美元增长到2028年的8159亿美元，五年复合增长率（CAGR）为32.9%。",
+      "confidence": 0.95,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 36,
+      "last_updated": 36,
+      "last_verified": 65,
+      "tags": [
+        "IDC",
+        "全球人工智能IT总投资",
+        "CAGR",
+        "2024-2028"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_117",
+      "statement": "G7发布的AI国际行为准则包含11点框架",
+      "confidence": 0.95,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 38,
+      "last_updated": 38,
+      "last_verified": 65,
+      "tags": [
+        "G7",
+        "AI准则",
+        "框架"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_137",
+      "statement": "G7于2023年10月30日发布的AI相关文件具体包括《广岛进程组织开发先进人工智能系统的国际指导原则》和《广岛进程组织开发先进人工智能系统的国际行为准则》",
+      "confidence": 0.95,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 48,
+      "last_updated": 48,
+      "last_verified": 65,
+      "tags": [
+        "G7",
+        "AI",
+        "国际指导原则",
+        "行为准则",
+        "广岛进程"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_143",
+      "statement": "不同研究机构、不同时间范围、不同细分市场（如整体AI IT投资、AI软件、生成式AI）的AI市场增长率预测存在显著差异。",
+      "confidence": 0.9199999999999999,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 64,
+      "last_updated": 64,
+      "last_verified": 64,
+      "tags": [
+        "市场预测",
+        "增长率",
+        "差异"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_040",
+      "statement": "Cloud costs continue to rise in 2024 according to industry reports",
+      "confidence": 0.9,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 6,
+      "last_updated": 6,
+      "last_verified": 65,
+      "tags": [
+        "cloud computing",
+        "cost trends",
+        "2024"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_140",
+      "statement": "中国人工智能市场（至2028年）的五年复合增长率预计为35.2%，高于全球平均水平。",
+      "confidence": 0.9,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 55,
+      "last_updated": 55,
+      "last_verified": 65,
+      "tags": [
+        "中国AI市场",
+        "CAGR",
+        "IDC",
+        "亚太地区"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_152",
+      "statement": "全球人工智能市场增长预测因细分市场（如整体IT投资、软件、生成式AI、区域市场）和时间范围不同而有显著差异。",
+      "confidence": 0.9,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 65,
+      "last_updated": 65,
+      "last_verified": 65,
+      "tags": [
+        "人工智能市场",
+        "增长预测",
+        "细分市场"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_118",
+      "statement": "G7的AI协议旨在建立全球协调一致的基于风险的监管框架",
+      "confidence": 0.88,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 38,
+      "last_updated": 38,
+      "last_verified": 65,
+      "tags": [
+        "G7",
+        "AI监管",
+        "全球协调"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_046",
+      "statement": "There are pricing analyses available comparing cloud costs from 2022 to 2024 across major providers",
+      "confidence": 0.87,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 26,
+      "last_updated": 26,
+      "last_verified": 64,
+      "tags": [
+        "cloud pricing",
+        "cost comparison",
+        "trend analysis"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_062",
+      "statement": "22% of organizations had at least 75% of their cloud costs allocated in 2024, up from previous years",
+      "confidence": 0.85,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 35,
+      "last_updated": 35,
+      "last_verified": 65,
+      "tags": [
+        "cloud cost allocation",
+        "cloud management",
+        "2024 trends"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_142",
+      "statement": "生成式AI（Generative AI）市场预计五年复合增长率（CAGR）为63.8%。",
+      "confidence": 0.85,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 63,
+      "last_updated": 63,
+      "last_verified": 65,
+      "tags": [
+        "生成式AI",
+        "CAGR",
+        "高增长"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_144",
+      "statement": "撰写员工反馈意见时可以采用先扬后抑的方式，先说积极方面再提改进建议",
+      "confidence": 0.84,
+      "source": "observation",
+      "category": "procedure",
+      "status": "",
+      "created_at": 64,
+      "last_updated": 64,
+      "last_verified": 64,
+      "tags": [
+        "反馈技巧",
+        "沟通方法"
+      ],
+      "parent_ids": [],
+      "pe_history": [],
+      "_markers": [
+        "FEEDBACK_DERIVED"
+      ]
+    },
+    {
+      "id": "belief_147",
+      "statement": "给投资人发邮件时，附件中除了商业计划书外，还应包含项目介绍和合作愿景，否则除非项目特别好，投资人很少回复",
+      "confidence": 0.84,
+      "source": "observation",
+      "category": "procedure",
+      "status": "",
+      "created_at": 64,
+      "last_updated": 64,
+      "last_verified": 64,
+      "tags": [
+        "投资人邮件",
+        "沟通技巧",
+        "创业"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_151",
+      "statement": "项目周报应在固定时间发出，标题应规范，正文应简洁总结情况、进度和风险",
+      "confidence": 0.84,
+      "source": "observation",
+      "category": "procedure",
+      "status": "",
+      "created_at": 64,
+      "last_updated": 64,
+      "last_verified": 64,
+      "tags": [
+        "项目管理",
+        "周报",
+        "沟通"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_067",
+      "statement": "Cloud costs continue to rise in 2024 according to industry reports",
+      "confidence": 0.82,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 35,
+      "last_updated": 35,
+      "last_verified": 64,
+      "tags": [
+        "cloud costs",
+        "2024 trends",
+        "inflation"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_041",
+      "statement": "Organizations can optimize cloud costs by matching computing power to use cases and seeking predictable pricing",
+      "confidence": 0.8,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 6,
+      "last_updated": 6,
+      "last_verified": 65,
+      "tags": [
+        "cloud optimization",
+        "cost management",
+        "best practices"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_148",
+      "statement": "在邮件中使用“绝密文件”、“商业机密”等激烈言辞会让投资人感到不舒服",
+      "confidence": 0.79,
+      "source": "observation",
+      "category": "procedure",
+      "status": "",
+      "created_at": 64,
+      "last_updated": 64,
+      "last_verified": 64,
+      "tags": [
+        "邮件礼仪",
+        "投资人关系"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_150",
+      "statement": "投资者更新邮件应添加简单摘要，让投资者只看摘要就能理解核心内容",
+      "confidence": 0.79,
+      "source": "observation",
+      "category": "procedure",
+      "status": "",
+      "created_at": 64,
+      "last_updated": 64,
+      "last_verified": 64,
+      "tags": [
+        "投资者沟通",
+        "邮件写作"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_039",
+      "statement": "More organizations are improving cloud cost allocation - 22% now have at least 75% of costs allocated in 2024",
+      "confidence": 0.7899999999999999,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 6,
+      "last_updated": 6,
+      "last_verified": 63,
+      "tags": [
+        "cloud cost management",
+        "cost allocation",
+        "optimization"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_079",
+      "statement": "根据IDC预测，到2028年中国人工智能总投资规模将突破1000亿美元，五年复合增长率为35.2%。",
+      "confidence": 0.7899999999999999,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 36,
+      "last_updated": 36,
+      "last_verified": 63,
+      "tags": [
+        "IDC",
+        "中国人工智能投资",
+        "CAGR",
+        "2028"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_080",
+      "statement": "人工智能软件市场预计从2024年的970亿美元增长到2029年的2180亿美元，复合年增长率为18%。",
+      "confidence": 0.7899999999999999,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 36,
+      "last_updated": 36,
+      "last_verified": 64,
+      "tags": [
+        "人工智能软件市场",
+        "CAGR",
+        "2024-2029"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_145",
+      "statement": "寻求反馈可能会带来负面情绪，但通过正确分析可以促进个人成长",
+      "confidence": 0.75,
+      "source": "observation",
+      "category": "hypothesis",
+      "status": "",
+      "created_at": 64,
+      "last_updated": 64,
+      "last_verified": 64,
+      "tags": [
+        "反馈接受",
+        "个人发展"
+      ],
+      "parent_ids": [],
+      "pe_history": [],
+      "_markers": [
+        "FEEDBACK_DERIVED"
+      ]
+    },
+    {
+      "id": "belief_146",
+      "statement": "互联网用户支持与传统客服的区别在于前者更主动地发现和解决问题",
+      "confidence": 0.72,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 64,
+      "last_updated": 64,
+      "last_verified": 64,
+      "tags": [
+        "用户支持",
+        "客服工作"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_149",
+      "statement": "系统可能会将陌生邮件误判为垃圾邮件，建议检查垃圾箱",
+      "confidence": 0.72,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 64,
+      "last_updated": 64,
+      "last_verified": 64,
+      "tags": [
+        "邮件技术",
+        "沟通障碍"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_056",
+      "statement": "G7 AI准则的发布与美国总统拜登发布关于'安全、可靠和值得信赖的人工智能'的行政命令发生在同一天",
+      "confidence": 0.7099999999999999,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 35,
+      "last_updated": 35,
+      "last_verified": 58,
+      "tags": [
+        "G7",
+        "美国",
+        "AI行政命令",
+        "时间关联"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_115",
+      "statement": "G7的AI指导原则和行为准则是在“广岛人工智能进程”框架下制定的",
+      "confidence": 0.7099999999999997,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 37,
+      "last_updated": 37,
+      "last_verified": 57,
+      "tags": [
+        "G7",
+        "AI",
+        "广岛进程",
+        "国际协调"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_081",
+      "statement": "全球人工智能大模型市场预计从2025年到2031年，年复合增长率（CAGR）为42.50%。",
+      "confidence": 0.6999999999999998,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 36,
+      "last_updated": 36,
+      "last_verified": 60,
+      "tags": [
+        "人工智能大模型市场",
+        "CAGR",
+        "2025-2031"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_119",
+      "statement": "人工智能软件市场预计2024-2029年复合年增长率为18%",
+      "confidence": 0.6799999999999999,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 39,
+      "last_updated": 39,
+      "last_verified": 61,
+      "tags": [
+        "人工智能软件",
+        "市场增长",
+        "预测"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_123",
+      "statement": "G7达成的AI国际指导原则和行为准则是自愿性的。",
+      "confidence": 0.6599999999999999,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 41,
+      "last_updated": 41,
+      "last_verified": 62,
+      "tags": [
+        "G7",
+        "AI",
+        "行为准则",
+        "自愿性"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_141",
+      "statement": "G7在2023年10月30日通过'广岛人工智能进程'框架发布了自愿性的AI国际指导原则和行为准则，旨在建立全球协调一致的基于风险的监管框架，并与美国同日的AI行政命令形成呼应。",
+      "confidence": 0.5404999999999998,
+      "source": "abstraction",
+      "category": "hypothesis",
+      "status": "",
+      "created_at": 60,
+      "last_updated": 60,
+      "last_verified": 60,
+      "tags": [
+        "G7",
+        "人工智能监管",
+        "国际准则",
+        "广岛进程",
+        "自愿性框架",
+        "全球协调"
+      ],
+      "parent_ids": [
+        "belief_056",
+        "belief_115",
+        "belief_117",
+        "belief_118",
+        "belief_123",
+        "belief_137"
+      ],
+      "pe_history": [],
+      "_markers": [
+        "BRAIN_ABSTRACTION"
+      ]
+    },
+    {
+      "id": "belief_120",
+      "statement": "全球人工智能大模型市场预计2025-2031年年复合增长率(CAGR)为42.50%",
+      "confidence": 0.5099999999999998,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 39,
+      "last_updated": 39,
+      "last_verified": 57,
+      "tags": [
+        "人工智能大模型",
+        "市场增长",
+        "预测"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_033",
+      "statement": "全球人工智能市场预计将以26.60%的年复合增长率(CAGR)从2026年增长至2034年。",
+      "confidence": 0.4506059874589957,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 6,
+      "last_updated": 65,
+      "last_verified": 65,
+      "tags": [
+        "AI市场",
+        "全球",
+        "增长率",
+        "预测"
+      ],
+      "parent_ids": [],
+      "pe_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06791999999999998,
+        0.06522715897599995,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.5378044496880829,
+        0.42683316162082874,
+        0.34703029500987825
+      ]
+    },
+    {
+      "id": "seed_004",
+      "statement": "Cloud computing costs rising 20% YoY",
+      "confidence": 0.4199999999999998,
+      "source": "seed",
+      "category": "fact",
+      "status": "",
+      "created_at": 0,
+      "last_updated": 65,
+      "last_verified": 65,
+      "tags": [
+        "cloud",
+        "costs"
+      ],
+      "parent_ids": [],
+      "pe_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "_markers": [
+        "SURVIVING_SEED"
+      ]
+    },
+    {
+      "id": "belief_128",
+      "statement": "全球人工智能市场预计在2026年至2034年间以26.60%的年复合增长率增长。",
+      "confidence": 0.37999999999999945,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 46,
+      "last_updated": 46,
+      "last_verified": 46,
+      "tags": [
+        "AI市场",
+        "市场规模",
+        "增长预测"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_132",
+      "statement": "美联储最新的利率决策是将联邦基金利率目标区间维持在3.50%-3.75%不变",
+      "confidence": 0.37999999999999945,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 46,
+      "last_updated": 46,
+      "last_verified": 46,
+      "tags": [
+        "美联储",
+        "利率决策",
+        "联邦基金利率",
+        "维持不变"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_134",
+      "statement": "美联储下一次议息会议将于1月28日至29日召开",
+      "confidence": 0.37999999999999945,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 46,
+      "last_updated": 46,
+      "last_verified": 46,
+      "tags": [
+        "美联储",
+        "议息会议",
+        "时间"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_129",
+      "statement": "AI电脑是2024年增长最快的AI相关硬件类别，同比增长502.3%。",
+      "confidence": 0.3299999999999995,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 46,
+      "last_updated": 46,
+      "last_verified": 46,
+      "tags": [
+        "AI硬件",
+        "AI电脑",
+        "市场增长"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_130",
+      "statement": "全球AI Agent市场规模预计从2024年的52.9亿美元增长至2030年的471亿美元。",
+      "confidence": 0.3299999999999995,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 46,
+      "last_updated": 46,
+      "last_verified": 46,
+      "tags": [
+        "AI Agent",
+        "市场规模",
+        "增长预测"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_133",
+      "statement": "美联储此次利率决议以10票赞成、2票反对通过，分歧明显",
+      "confidence": 0.3299999999999995,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 46,
+      "last_updated": 46,
+      "last_verified": 46,
+      "tags": [
+        "美联储",
+        "投票结果",
+        "分歧"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_135",
+      "statement": "市场预期美联储在1月会议上维持利率不变的概率高达95.2%",
+      "confidence": 0.3299999999999995,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 46,
+      "last_updated": 46,
+      "last_verified": 46,
+      "tags": [
+        "市场预期",
+        "利率概率",
+        "芝商所"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_006",
+      "statement": "G7国家于2023年10月30日就AI国际指导原则和开发人员行为准则达成协议",
+      "confidence": 0.23648644697920596,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 1,
+      "last_updated": 65,
+      "last_verified": 65,
+      "tags": [
+        "G7",
+        "国际原则",
+        "行为准则",
+        "2023年"
+      ],
+      "parent_ids": [],
+      "pe_history": [
+        0.03771491509355562,
+        0.04495755690066139,
+        0.04967225853085411,
+        0.06000048336753838,
+        0.062403579050075875,
+        0.07460287082295436,
+        0.0891231164271753,
+        0.07629531200764428,
+        0.11897852436254386,
+        0.14122587155992095,
+        0.16692471107122087,
+        0.20764141837629668,
+        0.22575350779133185,
+        0.27480386362783416,
+        0.3304678157223313,
+        0.39188845003470907,
+        0.45750369111341915,
+        0.5250993548660228,
+        0.5920338712586253,
+        0.6556122931520911
+      ]
+    },
+    {
+      "id": "belief_124",
+      "statement": "Hellotest是一个提供考试练习材料的平台",
+      "confidence": 0.20999999999999946,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 42,
+      "last_updated": 42,
+      "last_verified": 42,
+      "tags": [
+        "教育",
+        "考试准备",
+        "在线学习"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_125",
+      "statement": "Hello test是一个Android屏幕文本显示测试工具",
+      "confidence": 0.15999999999999948,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 42,
+      "last_updated": 42,
+      "last_verified": 42,
+      "tags": [
+        "Android",
+        "测试工具",
+        "软件开发"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_126",
+      "statement": "Hello Test是Spartan Camera的数据连接测试功能",
+      "confidence": 0.10999999999999957,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 42,
+      "last_updated": 42,
+      "last_verified": 42,
+      "tags": [
+        "摄像头",
+        "网络测试",
+        "硬件"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_055",
+      "statement": "G7的AI协议旨在促进全球协调一致的基于风险的AI监管框架",
+      "confidence": 0.09999999999999948,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 34,
+      "last_updated": 34,
+      "last_verified": 40,
+      "tags": [
+        "AI政策",
+        "风险框架",
+        "全球治理"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_116",
+      "statement": "G7的AI行为准则旨在应对人工智能可能带来的隐私和安全风险",
+      "confidence": 0.07999999999999946,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 37,
+      "last_updated": 37,
+      "last_verified": 37,
+      "tags": [
+        "G7",
+        "AI",
+        "隐私",
+        "安全",
+        "风险管理"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_085",
+      "statement": "微软Azure Copilot Migration Agent已进入公开预览，帮助组织在IT迁移中嵌入AI",
+      "confidence": 0.07999999999999935,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 36,
+      "last_updated": 36,
+      "last_verified": 36,
+      "tags": [
+        "微软",
+        "Azure Copilot",
+        "企业现代化"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_089",
+      "statement": "微软上周推出了Azure Copilot Migration Agent，现已进入公开预览阶段",
+      "confidence": 0.07999999999999935,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 36,
+      "last_updated": 36,
+      "last_verified": 36,
+      "tags": [
+        "微软",
+        "Azure Copilot",
+        "企业迁移"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_054",
+      "statement": "G7的AI国际指导原则和行为准则是自愿性的框架",
+      "confidence": 0.05999999999999947,
+      "source": "observation",
+      "category": "fact",
+      "status": "",
+      "created_at": 34,
+      "last_updated": 34,
+      "last_verified": 38,
+      "tags": [
+        "AI治理",
+        "自愿准则",
+        "国际规范"
+      ],
+      "parent_ids": [],
+      "pe_history": []
+    },
+    {
+      "id": "belief_139",
+      "statement": "G7国家在2023年10月30日发布了一套自愿性的AI国际指导原则和行为准则，旨在建立全球协调一致的基于风险的监管框架，并与美国同日的行政命令相呼应。",
+      "confidence": 0.05630956937655665,
+      "source": "abstraction",
+      "category": "hypothesis",
+      "status": "",
+      "created_at": 50,
+      "last_updated": 50,
+      "last_verified": 50,
+      "tags": [
+        "AI governance",
+        "G7",
+        "international cooperation",
+        "voluntary standards",
+        "risk-based regulation"
+      ],
+      "parent_ids": [
+        "belief_006",
+        "belief_056",
+        "belief_115",
+        "belief_117",
+        "belief_118",
+        "belief_123"
+      ],
+      "pe_history": [],
+      "_markers": [
+        "BRAIN_ABSTRACTION"
+      ]
+    }
+  ]
+}

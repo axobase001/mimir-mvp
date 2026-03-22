@@ -1,4 +1,4 @@
-from ..types import Belief, PEType, TypedPE
+from ..dtypes import Belief, PEType, TypedPE
 from ..config import MimirConfig
 
 

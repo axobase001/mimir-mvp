@@ -1,6 +1,6 @@
 import logging
 
-from ..types import Belief
+from ..dtypes import Belief
 from ..brain.belief_graph import BeliefGraph
 from ..llm.client import LLMClient, parse_json_response
 from ..config import MimirConfig

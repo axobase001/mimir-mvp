@@ -9,7 +9,7 @@ from mimir.skills.base import Skill, SkillResult
 from mimir.skills.registry import SmartSkillRegistry
 from mimir.brain.memory import Memory
 from mimir.config import MimirConfig
-from mimir.types import Procedure
+from mimir.dtypes import Procedure
 
 
 class MockSkill(Skill):

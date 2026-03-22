@@ -6,7 +6,7 @@ Implement this interface to provide your own belief graph.
 
 from abc import ABC, abstractmethod
 from typing import Optional
-from ..types import Belief
+from ..dtypes import Belief
 from ..config import MimirConfig
 
 

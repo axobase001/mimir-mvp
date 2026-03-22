@@ -82,8 +82,16 @@ class WebFetchSkill(Skill):
             # Simple HTML to text
             text = _html_to_text(html)
 
+            # Extract email addresses from raw HTML before stripping
+            found_emails = _extract_emails(html)
+
             if len(text) > max_length:
                 text = text[:max_length] + "... [truncated]"
+
+            # Append found emails as structured data
+            if found_emails:
+                email_section = "\n\n[EMAILS FOUND ON PAGE: " + ", ".join(found_emails) + "]"
+                text += email_section
 
             self._success_count += 1
             return {"success": True, "result": text, "error": None}
@@ -100,6 +108,40 @@ class WebFetchSkill(Skill):
             "call_count": self._call_count,
             "success_count": self._success_count,
         }
+
+
+_EMAIL_RE = re.compile(r'[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}')
+_JUNK_EMAIL_DOMAINS = {
+    "example.com", "example.org", "test.com", "sentry.io",
+    "w3.org", "schema.org", "xmlns.com", "google.com",
+    "gstatic.com", "googleapis.com", "cloudflare.com",
+}
+
+
+def _extract_emails(html: str) -> list[str]:
+    """Extract real email addresses from HTML using regex.
+
+    Filters out junk (tracking pixels, schema URIs, etc).
+    """
+    # Also check mailto: links
+    raw = set(_EMAIL_RE.findall(html))
+    # Also decode HTML entities that might hide emails
+    decoded = html.replace("&#64;", "@").replace("&#x40;", "@").replace("[at]", "@").replace(" AT ", "@")
+    raw.update(_EMAIL_RE.findall(decoded))
+
+    cleaned = []
+    for addr in raw:
+        addr_lower = addr.lower()
+        domain = addr_lower.split("@")[1] if "@" in addr_lower else ""
+        # Skip junk domains
+        if domain in _JUNK_EMAIL_DOMAINS:
+            continue
+        # Skip image/asset filenames that look like emails
+        if any(addr_lower.endswith(ext) for ext in [".png", ".jpg", ".gif", ".svg", ".css", ".js"]):
+            continue
+        cleaned.append(addr_lower)
+
+    return sorted(set(cleaned))[:10]  # cap at 10
 
 
 def _html_to_text(html: str) -> str:

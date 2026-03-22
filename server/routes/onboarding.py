@@ -4,7 +4,7 @@ import logging
 
 from fastapi import APIRouter, Request, HTTPException
 
-from ...types import Belief, BeliefSource
+from ...dtypes import Belief, BeliefSource
 
 log = logging.getLogger(__name__)
 

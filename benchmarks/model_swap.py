@@ -16,7 +16,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock
 
 from mimir.config import MimirConfig
-from mimir.types import Belief, BeliefSource, Procedure
+from mimir.dtypes import Belief, BeliefSource, Procedure
 from mimir.brain.belief_graph import BeliefGraph
 from mimir.brain.sec_matrix import SECMatrix
 from mimir.brain.prediction import PredictionEngine

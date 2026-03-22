@@ -81,7 +81,7 @@ async def main_async(args: argparse.Namespace) -> None:
     # ── DEV MODE: auto-create user + brain, bypass auth ──
     seed_beliefs = config_data.get("seed_beliefs", [])
     try:
-        dev_user = user_db.get_user_by_email("dev@skuld.local")
+        dev_user = user_db.get_user_by_email("dev@mimir.local") or user_db.get_user_by_email("dev@skuld.local")
         if dev_user is None:
             dev_user = user_db.create_user("dev@skuld.local", "devdev123", "Dev")
         dev_uid = dev_user["id"]

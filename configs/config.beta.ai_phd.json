@@ -1,0 +1,18 @@
+{
+  "persona": "ai_phd",
+  "llm_api_key": "",
+  "llm_base_url": "https://api.deepseek.com",
+  "llm_model": "deepseek-chat",
+  "searxng_url": "http://beta-searxng:8080/search",
+  "cycle_interval_seconds": 300,
+  "scheduler_interval": 300,
+  "confidence_decay_rate": 0.02,
+  "sandbox": true,
+  "seed_beliefs": [
+    {"statement": "Video understanding in AI involves temporal modeling, object tracking, and action recognition", "tags": ["video", "ai", "research"], "confidence": 0.9},
+    {"statement": "Transformer architectures have become dominant in video understanding tasks", "tags": ["transformer", "architecture", "video"], "confidence": 0.85},
+    {"statement": "arXiv is the primary venue for pre-publication of AI research papers", "tags": ["arxiv", "research", "papers"], "confidence": 0.95},
+    {"statement": "Reproducibility of experiments is a significant challenge in AI research", "tags": ["reproducibility", "research", "methodology"], "confidence": 0.8},
+    {"statement": "State-of-the-art benchmarks for video understanding include Kinetics, Something-Something, and ActivityNet", "tags": ["benchmarks", "video", "evaluation"], "confidence": 0.75}
+  ]
+}

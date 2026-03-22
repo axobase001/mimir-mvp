@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, HTTPException
 
-from ...types import Belief, BeliefSource
+from ...dtypes import Belief, BeliefSource
 
 router = APIRouter()
 
@@ -62,6 +62,11 @@ async def add_belief(request: Request, data: dict):
         tags=tags,
     )
     bid = bg.add_belief(b)
+
+    # Persist immediately
+    scheduler = request.app.state.scheduler
+    scheduler._save_brain_state(user_id)
+
     return {"action": "created", "belief_id": bid}
 
 

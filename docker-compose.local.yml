@@ -1,0 +1,29 @@
+services:
+  aldebaran:
+    build: .
+    container_name: aldebaran
+    ports:
+      - "8000:8000"
+    environment:
+      - JWT_SECRET=skuld-local-aldebaran
+      - LLM_API_KEY=${LLM_API_KEY}
+    volumes:
+      # Persist brain data on host (main.py uses Path("data") relative to CWD=/srv)
+      - ./data:/srv/data
+      # Config (read-only)
+      - ./config.docker.json:/srv/mimir/config.json:ro
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/dashboard')"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: aldebaran-searxng
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

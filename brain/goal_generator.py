@@ -8,7 +8,7 @@ ENDOGENOUS goals (Brain-generated) may be abandoned, decayed, or completed.
 Brain's autonomy operates in the space the user has not claimed.
 """
 
-from ..types import BeliefCategory, Goal, GoalOrigin, GoalStatus
+from ..dtypes import BeliefCategory, Goal, GoalOrigin, GoalStatus
 from ..config import MimirConfig
 from .belief_graph import BeliefGraph
 from .sec_matrix import SECMatrix
@@ -63,7 +63,7 @@ class GoalGenerator:
 
             c_values = [self.sec_matrix.get_c_value(tag) for tag in belief.tags]
             sec_factor = max(c_values) if c_values else 0.0
-            priority = avg_pe * max(sec_factor, 0.1)
+            priority = min(0.8, avg_pe * max(sec_factor, 0.1))
 
             new_goals.append(
                 Goal(
@@ -89,7 +89,7 @@ class GoalGenerator:
                 continue
 
             staleness = current_cycle - belief.last_verified
-            priority = belief.confidence * (staleness / 100.0)
+            priority = min(0.8, belief.confidence * (staleness / 100.0))
 
             new_goals.append(
                 Goal(

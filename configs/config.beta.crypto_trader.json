@@ -1,0 +1,19 @@
+{
+  "persona": "crypto_trader",
+  "llm_api_key": "",
+  "llm_base_url": "https://api.deepseek.com",
+  "llm_model": "deepseek-chat",
+  "searxng_url": "http://beta-searxng:8080/search",
+  "cycle_interval_seconds": 120,
+  "scheduler_interval": 120,
+  "confidence_decay_rate": 0.02,
+  "sandbox": true,
+  "etherscan_api_key": "",
+  "seed_beliefs": [
+    {"statement": "Bitcoin is the largest cryptocurrency by market cap", "tags": ["crypto", "bitcoin", "market"], "confidence": 0.95},
+    {"statement": "Crypto markets operate 24/7 with high volatility", "tags": ["crypto", "market", "volatility"], "confidence": 0.9},
+    {"statement": "On-chain data such as whale movements can signal market shifts", "tags": ["onchain", "analysis", "signals"], "confidence": 0.6},
+    {"statement": "Market sentiment on social media correlates with short-term price movements", "tags": ["sentiment", "trading", "social"], "confidence": 0.65},
+    {"statement": "Risk management and position sizing are critical for survival in crypto trading", "tags": ["risk", "trading", "strategy"], "confidence": 0.85}
+  ]
+}

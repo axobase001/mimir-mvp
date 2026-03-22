@@ -1,6 +1,6 @@
 import logging
 
-from ..types import Belief, BeliefCategory, BeliefSource, Goal
+from ..dtypes import Belief, BeliefCategory, BeliefSource, Goal
 from ..config import MimirConfig
 from .client import LLMClient, parse_json_response
 

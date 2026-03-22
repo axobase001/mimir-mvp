@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from .routes import dashboard, chat, beliefs, goals, ws, tools
+from .routes import dashboard, chat, beliefs, goals, ws, tools, outreach, mailbox
 from .routes import onboarding
 from .auth.routes import router as auth_router
 from .auth.jwt import verify_token
@@ -137,6 +137,8 @@ app.include_router(chat.router)
 app.include_router(beliefs.router)
 app.include_router(goals.router)
 app.include_router(tools.router)
+app.include_router(outreach.router)
+app.include_router(mailbox.router)
 app.include_router(ws.router)
 
 app.mount("/static", StaticFiles(directory=_STATIC_DIR), name="static")

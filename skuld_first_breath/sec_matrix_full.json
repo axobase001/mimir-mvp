@@ -1,0 +1,2153 @@
+{
+  "total": 267,
+  "positive": 12,
+  "negative": 11,
+  "entries": [
+    {
+      "cluster": "预测",
+      "c_value": 0.06398,
+      "d_obs": 0.128299,
+      "d_not": 0.192279,
+      "obs_count": 30,
+      "not_count": 33,
+      "_rank": "TOP_POSITIVE_1"
+    },
+    {
+      "cluster": "增长率",
+      "c_value": 0.059377,
+      "d_obs": 0.128299,
+      "d_not": 0.187676,
+      "obs_count": 30,
+      "not_count": 30,
+      "_rank": "TOP_POSITIVE_2"
+    },
+    {
+      "cluster": "AI市场",
+      "c_value": 0.059377,
+      "d_obs": 0.128299,
+      "d_not": 0.187676,
+      "obs_count": 30,
+      "not_count": 30,
+      "_rank": "TOP_POSITIVE_3"
+    },
+    {
+      "cluster": "全球",
+      "c_value": 0.059377,
+      "d_obs": 0.128299,
+      "d_not": 0.187676,
+      "obs_count": 30,
+      "not_count": 30,
+      "_rank": "TOP_POSITIVE_4"
+    },
+    {
+      "cluster": "costs",
+      "c_value": 0.056052,
+      "d_obs": 0.134519,
+      "d_not": 0.190571,
+      "obs_count": 59,
+      "not_count": 6,
+      "_rank": "TOP_POSITIVE_5"
+    },
+    {
+      "cluster": "cloud",
+      "c_value": 0.056052,
+      "d_obs": 0.134519,
+      "d_not": 0.190571,
+      "obs_count": 59,
+      "not_count": 6
+    },
+    {
+      "cluster": "trend",
+      "c_value": 0.027478,
+      "d_obs": 0.065593,
+      "d_not": 0.093072,
+      "obs_count": 2,
+      "not_count": 61
+    },
+    {
+      "cluster": "2023",
+      "c_value": 0.027478,
+      "d_obs": 0.065593,
+      "d_not": 0.093072,
+      "obs_count": 2,
+      "not_count": 61
+    },
+    {
+      "cluster": "行为准则",
+      "c_value": 0.027199,
+      "d_obs": 0.13108,
+      "d_not": 0.158278,
+      "obs_count": 32,
+      "not_count": 33
+    },
+    {
+      "cluster": "国际原则",
+      "c_value": 0.027199,
+      "d_obs": 0.13108,
+      "d_not": 0.158278,
+      "obs_count": 32,
+      "not_count": 33
+    },
+    {
+      "cluster": "G7",
+      "c_value": 0.027199,
+      "d_obs": 0.13108,
+      "d_not": 0.158278,
+      "obs_count": 32,
+      "not_count": 33
+    },
+    {
+      "cluster": "2023年",
+      "c_value": 0.027199,
+      "d_obs": 0.13108,
+      "d_not": 0.158278,
+      "obs_count": 32,
+      "not_count": 33
+    },
+    {
+      "cluster": "2025年",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.07867,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "AI监管",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136282,
+      "obs_count": 1,
+      "not_count": 60
+    },
+    {
+      "cluster": "政府干预",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.093925,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "2026年",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.093925,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "cumulative",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.159183,
+      "obs_count": 1,
+      "not_count": 32
+    },
+    {
+      "cluster": "机构预测",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.093925,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "经济学家预测",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.07867,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "软法向硬法",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.063451,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "Meta",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.070217,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "加拿大AI法案",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.126035,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "英国AI监管",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.093925,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "fine",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.126035,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "2025",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.159183,
+      "obs_count": 1,
+      "not_count": 32
+    },
+    {
+      "cluster": "国际治理",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.07867,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "国际合作",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.07867,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "监管演变",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.093925,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "2024年",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.159183,
+      "obs_count": 1,
+      "not_count": 32
+    },
+    {
+      "cluster": "全球政策",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.159183,
+      "obs_count": 1,
+      "not_count": 32
+    },
+    {
+      "cluster": "基于风险的监管",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.126035,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "欧盟AI法案",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.126035,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "降息",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.093925,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "双重监管",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.063451,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "data transfer",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.126035,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "监管理念分化",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.07867,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "花旗集团",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.063451,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "美联储",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.138421,
+      "obs_count": 0,
+      "not_count": 50
+    },
+    {
+      "cluster": "监管趋势",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.063451,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "领导团队",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.124975,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "影响因素",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.124975,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "联合国",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.124975,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "database",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.108623,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "就业",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.124975,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "多边合作",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.124975,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "通胀",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.124975,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "全球治理",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.135371,
+      "obs_count": 0,
+      "not_count": 62
+    },
+    {
+      "cluster": "enforcement tracker",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.108623,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "AI-specific legislation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.091066,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "利率",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.140138,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "soft law to hard law",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.140138,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "regulatory trend",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.140138,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "governance",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.140138,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "policy coverage",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.091066,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "UK AI regulation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.156402,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "global dialogue",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.156402,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "global policy",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.192279,
+      "obs_count": 0,
+      "not_count": 33
+    },
+    {
+      "cluster": "risk-based framework",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.192279,
+      "obs_count": 0,
+      "not_count": 33
+    },
+    {
+      "cluster": "基点",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.059921,
+      "obs_count": 0,
+      "not_count": 25
+    },
+    {
+      "cluster": "点阵图",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.140138,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "minority",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.091066,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "governance shift",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.156402,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "government intervention",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.156402,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "降息幅度",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.059921,
+      "obs_count": 0,
+      "not_count": 25
+    },
+    {
+      "cluster": "AI regulation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.192279,
+      "obs_count": 0,
+      "not_count": 33
+    },
+    {
+      "cluster": "中值预测",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.140138,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "Canada AI regulation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.192279,
+      "obs_count": 0,
+      "not_count": 33
+    },
+    {
+      "cluster": "EU AI Act",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.192279,
+      "obs_count": 0,
+      "not_count": 33
+    },
+    {
+      "cluster": "UN AI governance",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.156402,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "US AI policy",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.072987,
+      "obs_count": 0,
+      "not_count": 25
+    },
+    {
+      "cluster": "deregulation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.072987,
+      "obs_count": 0,
+      "not_count": 25
+    },
+    {
+      "cluster": "innovation priority",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.072987,
+      "obs_count": 0,
+      "not_count": 25
+    },
+    {
+      "cluster": "降息幅度预测",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.022626,
+      "obs_count": 0,
+      "not_count": 21
+    },
+    {
+      "cluster": "enforcement",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.064914,
+      "obs_count": 0,
+      "not_count": 57
+    },
+    {
+      "cluster": "联邦基金利率",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.137567,
+      "obs_count": 0,
+      "not_count": 46
+    },
+    {
+      "cluster": "利率预测",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.086117,
+      "obs_count": 0,
+      "not_count": 25
+    },
+    {
+      "cluster": "violations",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.102774,
+      "obs_count": 0,
+      "not_count": 26
+    },
+    {
+      "cluster": "AI governance",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.151923,
+      "obs_count": 0,
+      "not_count": 43
+    },
+    {
+      "cluster": "UK",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.13653,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "regulatory divergence",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.102774,
+      "obs_count": 0,
+      "not_count": 26
+    },
+    {
+      "cluster": "华尔街投行",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.022626,
+      "obs_count": 0,
+      "not_count": 21
+    },
+    {
+      "cluster": "近期降息",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.102774,
+      "obs_count": 0,
+      "not_count": 26
+    },
+    {
+      "cluster": "international governance",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.102774,
+      "obs_count": 0,
+      "not_count": 26
+    },
+    {
+      "cluster": "data processing",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.102774,
+      "obs_count": 0,
+      "not_count": 26
+    },
+    {
+      "cluster": "UN",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.102774,
+      "obs_count": 0,
+      "not_count": 26
+    },
+    {
+      "cluster": "regulatory shift",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.13653,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "cloud computing",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "cost allocation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "cloud cost management",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "AI投资",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.064786,
+      "obs_count": 0,
+      "not_count": 56
+    },
+    {
+      "cluster": "生成式AI",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "马太效应",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.064786,
+      "obs_count": 0,
+      "not_count": 56
+    },
+    {
+      "cluster": "规模",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.09461,
+      "obs_count": 0,
+      "not_count": 58
+    },
+    {
+      "cluster": "技术壁垒",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.05313,
+      "obs_count": 0,
+      "not_count": 53
+    },
+    {
+      "cluster": "AIGC",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.064786,
+      "obs_count": 0,
+      "not_count": 56
+    },
+    {
+      "cluster": "best practices",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "AI政策",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.131262,
+      "obs_count": 0,
+      "not_count": 39
+    },
+    {
+      "cluster": "inflation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "融资",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.064786,
+      "obs_count": 0,
+      "not_count": 56
+    },
+    {
+      "cluster": "cost management",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "cloud optimization",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "中国",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.09461,
+      "obs_count": 0,
+      "not_count": 58
+    },
+    {
+      "cluster": "TPF",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.05313,
+      "obs_count": 0,
+      "not_count": 53
+    },
+    {
+      "cluster": "AI投资趋势",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.05313,
+      "obs_count": 0,
+      "not_count": 53
+    },
+    {
+      "cluster": "cost trends",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "PPI",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "资本集中",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.064786,
+      "obs_count": 0,
+      "not_count": 56
+    },
+    {
+      "cluster": "智能驾驶",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.064786,
+      "obs_count": 0,
+      "not_count": 56
+    },
+    {
+      "cluster": "optimization",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136255,
+      "obs_count": 0,
+      "not_count": 60
+    },
+    {
+      "cluster": "全球趋势",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.005314,
+      "obs_count": 0,
+      "not_count": 7
+    },
+    {
+      "cluster": "social media",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.05951,
+      "obs_count": 0,
+      "not_count": 36
+    },
+    {
+      "cluster": "breach reports",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.071352,
+      "obs_count": 0,
+      "not_count": 38
+    },
+    {
+      "cluster": "tech companies",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.05951,
+      "obs_count": 0,
+      "not_count": 36
+    },
+    {
+      "cluster": "data source",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.071352,
+      "obs_count": 0,
+      "not_count": 38
+    },
+    {
+      "cluster": "increase",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.071352,
+      "obs_count": 0,
+      "not_count": 38
+    },
+    {
+      "cluster": "trend analysis",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136004,
+      "obs_count": 0,
+      "not_count": 40
+    },
+    {
+      "cluster": "cost comparison",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136004,
+      "obs_count": 0,
+      "not_count": 40
+    },
+    {
+      "cluster": "cloud pricing",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.136004,
+      "obs_count": 0,
+      "not_count": 40
+    },
+    {
+      "cluster": "data collection",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.064404,
+      "obs_count": 0,
+      "not_count": 36
+    },
+    {
+      "cluster": "transparency",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.064404,
+      "obs_count": 0,
+      "not_count": 36
+    },
+    {
+      "cluster": "research",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.048814,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "compliance",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.0564,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "细分赛道",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.044614,
+      "obs_count": 0,
+      "not_count": 26
+    },
+    {
+      "cluster": "AI应用",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.044614,
+      "obs_count": 0,
+      "not_count": 26
+    },
+    {
+      "cluster": "enforcement trends",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.041441,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "data protection",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.041441,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "投资增长",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.044614,
+      "obs_count": 0,
+      "not_count": 26
+    },
+    {
+      "cluster": "技术应用",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.049561,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "增长驱动因素",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.049561,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "行业动态",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.049561,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "风险框架",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.13108,
+      "obs_count": 0,
+      "not_count": 32
+    },
+    {
+      "cluster": "自愿准则",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.13108,
+      "obs_count": 0,
+      "not_count": 32
+    },
+    {
+      "cluster": "record fine",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.06428,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "€2.9 billion",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.088221,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "国际规范",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.13108,
+      "obs_count": 0,
+      "not_count": 32
+    },
+    {
+      "cluster": "AI治理",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.13108,
+      "obs_count": 0,
+      "not_count": 32
+    },
+    {
+      "cluster": "时间关联",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "OpenClaw",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.085367,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "Azure Copilot",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "阿里巴巴",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.053376,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "cloud management",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "Workflow型",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "美国",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "技术演进",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "cloud costs",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "Azure",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "开源AI",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.085367,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "中国市场",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.085367,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "企业现代化",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "2024 trends",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "AI Agent",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "2024趋势",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "Qwen模型",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.053376,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "企业AI",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.053376,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "cloud cost allocation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "中国AI市场",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "微软",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "企业迁移",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "Qwen",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.053376,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "AI行政命令",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128768,
+      "obs_count": 0,
+      "not_count": 31
+    },
+    {
+      "cluster": "2022-2027",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "2028",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "CAGR",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "AI趋势",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.021744,
+      "obs_count": 0,
+      "not_count": 16
+    },
+    {
+      "cluster": "人工智能软件市场",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "2024-2029",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "中国人工智能投资",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "发展趋势",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "IDC",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "企业布局",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.021744,
+      "obs_count": 0,
+      "not_count": 16
+    },
+    {
+      "cluster": "2024-2028",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "2025-2031",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "全球人工智能IT总投资",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "人工智能大模型市场",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128299,
+      "obs_count": 0,
+      "not_count": 30
+    },
+    {
+      "cluster": "企业AI服务",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.052309,
+      "obs_count": 0,
+      "not_count": 25
+    },
+    {
+      "cluster": "AI演进",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.020736,
+      "obs_count": 0,
+      "not_count": 15
+    },
+    {
+      "cluster": "Workflow",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128068,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "自主性",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.020736,
+      "obs_count": 0,
+      "not_count": 15
+    },
+    {
+      "cluster": "技术发展",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.020736,
+      "obs_count": 0,
+      "not_count": 15
+    },
+    {
+      "cluster": "风险管理",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128068,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "AI",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128068,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "国际协调",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128068,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "安全",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128068,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "广岛进程",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128068,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "开源",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.084503,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "隐私",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.128068,
+      "obs_count": 0,
+      "not_count": 29
+    },
+    {
+      "cluster": "框架",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127951,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "AI准则",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127951,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "全球协调",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127951,
+      "obs_count": 0,
+      "not_count": 28
+    },
+    {
+      "cluster": "市场增长",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127863,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "人工智能软件",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127863,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "人工智能大模型",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127863,
+      "obs_count": 0,
+      "not_count": 27
+    },
+    {
+      "cluster": "BLS data",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.020289,
+      "obs_count": 0,
+      "not_count": 6
+    },
+    {
+      "cluster": "自愿性",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127667,
+      "obs_count": 0,
+      "not_count": 25
+    },
+    {
+      "cluster": "pricing analysis",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.020289,
+      "obs_count": 0,
+      "not_count": 6
+    },
+    {
+      "cluster": "教育",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127476,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "软件开发",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127476,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "摄像头",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127476,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "Android",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127476,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "在线学习",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127476,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "考试准备",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127476,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "硬件",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127476,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "测试工具",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127476,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "网络测试",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.127476,
+      "obs_count": 0,
+      "not_count": 23
+    },
+    {
+      "cluster": "时间",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "维持不变",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "市场影响",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.080804,
+      "obs_count": 0,
+      "not_count": 18
+    },
+    {
+      "cluster": "增长预测",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "市场规模",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "投资趋势",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.022174,
+      "obs_count": 0,
+      "not_count": 11
+    },
+    {
+      "cluster": "经济效益",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.080804,
+      "obs_count": 0,
+      "not_count": 18
+    },
+    {
+      "cluster": "经济数据",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.040606,
+      "obs_count": 0,
+      "not_count": 15
+    },
+    {
+      "cluster": "利率概率",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "议息会议",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "芝商所",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "AI电脑",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "市场预测",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.065808,
+      "obs_count": 0,
+      "not_count": 8
+    },
+    {
+      "cluster": "AI硬件",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "市场预期",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "就业市场",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.040606,
+      "obs_count": 0,
+      "not_count": 15
+    },
+    {
+      "cluster": "降息概率",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.040606,
+      "obs_count": 0,
+      "not_count": 15
+    },
+    {
+      "cluster": "投票结果",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "人工智能",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.022174,
+      "obs_count": 0,
+      "not_count": 11
+    },
+    {
+      "cluster": "分歧",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "利率决策",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.125072,
+      "obs_count": 0,
+      "not_count": 20
+    },
+    {
+      "cluster": "国际指导原则",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.124734,
+      "obs_count": 0,
+      "not_count": 18
+    },
+    {
+      "cluster": "云成本管理",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.018922,
+      "obs_count": 0,
+      "not_count": 6
+    },
+    {
+      "cluster": "international cooperation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.123812,
+      "obs_count": 0,
+      "not_count": 15
+    },
+    {
+      "cluster": "voluntary standards",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.123812,
+      "obs_count": 0,
+      "not_count": 15
+    },
+    {
+      "cluster": "risk-based regulation",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.123812,
+      "obs_count": 0,
+      "not_count": 15
+    },
+    {
+      "cluster": "亚太地区",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.120386,
+      "obs_count": 0,
+      "not_count": 11
+    },
+    {
+      "cluster": "自愿性框架",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.101095,
+      "obs_count": 0,
+      "not_count": 5
+    },
+    {
+      "cluster": "人工智能监管",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.101095,
+      "obs_count": 0,
+      "not_count": 5
+    },
+    {
+      "cluster": "国际准则",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.101095,
+      "obs_count": 0,
+      "not_count": 5
+    },
+    {
+      "cluster": "高增长",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.084219,
+      "obs_count": 0,
+      "not_count": 3
+    },
+    {
+      "cluster": "差异",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.059621,
+      "obs_count": 0,
+      "not_count": 2
+    },
+    {
+      "cluster": "沟通技巧",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "沟通",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "投资者沟通",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "人工智能市场",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "邮件礼仪",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "用户支持",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "客服工作",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "反馈技巧",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "反馈接受",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "邮件写作",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "创业",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "沟通障碍",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "沟通方法",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "个人发展",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "投资人邮件",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "细分市场",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "邮件技术",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "项目管理",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "投资人关系",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "周报",
+      "c_value": 0.0,
+      "d_obs": 0.0,
+      "d_not": 0.033421,
+      "obs_count": 0,
+      "not_count": 1
+    },
+    {
+      "cluster": "DLA Piper",
+      "c_value": -0.015241,
+      "d_obs": 0.150784,
+      "d_not": 0.135543,
+      "obs_count": 27,
+      "not_count": 38
+    },
+    {
+      "cluster": "fines",
+      "c_value": -0.053254,
+      "d_obs": 0.187676,
+      "d_not": 0.134422,
+      "obs_count": 30,
+      "not_count": 35
+    },
+    {
+      "cluster": "GDPR",
+      "c_value": -0.053254,
+      "d_obs": 0.187676,
+      "d_not": 0.134422,
+      "obs_count": 30,
+      "not_count": 35
+    },
+    {
+      "cluster": "2024",
+      "c_value": -0.053919,
+      "d_obs": 0.187728,
+      "d_not": 0.133809,
+      "obs_count": 29,
+      "not_count": 36
+    },
+    {
+      "cluster": "market",
+      "c_value": -0.068236,
+      "d_obs": 0.19629,
+      "d_not": 0.128055,
+      "obs_count": 28,
+      "not_count": 7
+    },
+    {
+      "cluster": "tech",
+      "c_value": -0.068236,
+      "d_obs": 0.19629,
+      "d_not": 0.128055,
+      "obs_count": 28,
+      "not_count": 7
+    },
+    {
+      "cluster": "finance",
+      "c_value": -0.140555,
+      "d_obs": 0.144429,
+      "d_not": 0.003874,
+      "obs_count": 5,
+      "not_count": 10,
+      "_rank": "TOP_NEGATIVE_5"
+    },
+    {
+      "cluster": "macro",
+      "c_value": -0.140555,
+      "d_obs": 0.144429,
+      "d_not": 0.003874,
+      "obs_count": 5,
+      "not_count": 10,
+      "_rank": "TOP_NEGATIVE_4"
+    },
+    {
+      "cluster": "gdpr",
+      "c_value": -0.141291,
+      "d_obs": 0.144429,
+      "d_not": 0.003138,
+      "obs_count": 5,
+      "not_count": 12,
+      "_rank": "TOP_NEGATIVE_3"
+    },
+    {
+      "cluster": "regulation",
+      "c_value": -0.141605,
+      "d_obs": 0.144429,
+      "d_not": 0.002824,
+      "obs_count": 5,
+      "not_count": 13,
+      "_rank": "TOP_NEGATIVE_2"
+    },
+    {
+      "cluster": "ai_reg",
+      "c_value": -0.141605,
+      "d_obs": 0.144429,
+      "d_not": 0.002824,
+      "obs_count": 5,
+      "not_count": 13,
+      "_rank": "TOP_NEGATIVE_1"
+    }
+  ]
+}

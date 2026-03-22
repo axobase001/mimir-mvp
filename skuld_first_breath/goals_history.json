@@ -1,0 +1,65 @@
+{
+  "total": 6,
+  "goals": [
+    {
+      "id": "goal_001",
+      "description": "Investigate: GDPR fines exceeded $1M in 2024",
+      "reason": "target belief pruned",
+      "target_belief_id": "seed_000",
+      "status": "abandoned",
+      "origin": "endogenous",
+      "priority": 0.03629425854574609,
+      "created_at": 4
+    },
+    {
+      "id": "goal_003",
+      "description": "Investigate: 美联储2026年可能降息",
+      "reason": "target belief pruned",
+      "target_belief_id": "seed_002",
+      "status": "abandoned",
+      "origin": "endogenous",
+      "priority": 0.03969144784714157,
+      "created_at": 5
+    },
+    {
+      "id": "goal_002",
+      "description": "Investigate: AI regulation is increasing globally",
+      "reason": "target belief pruned",
+      "target_belief_id": "seed_001",
+      "status": "abandoned",
+      "origin": "endogenous",
+      "priority": 0.036668405723417494,
+      "created_at": 5
+    },
+    {
+      "id": "goal_004",
+      "description": "Investigate: AI行业在快速增长",
+      "reason": "target belief pruned",
+      "target_belief_id": "seed_003",
+      "status": "abandoned",
+      "origin": "endogenous",
+      "priority": 0.0454646709538102,
+      "created_at": 27
+    },
+    {
+      "id": "goal_005",
+      "description": "Investigate: G7国家于2023年10月30日就AI国际指导原则和开发人员行为准则达成协议",
+      "reason": "PE > 0.3 for 3 cycles",
+      "target_belief_id": "belief_006",
+      "status": "active",
+      "origin": "endogenous",
+      "priority": 0.03932866522901532,
+      "created_at": 62
+    },
+    {
+      "id": "goal_006",
+      "description": "Investigate: 全球人工智能市场预计将以26.60%的年复合增长率(CAGR)从2026年增长至2034年。",
+      "reason": "PE > 0.3 for 3 cycles",
+      "target_belief_id": "belief_033",
+      "status": "active",
+      "origin": "endogenous",
+      "priority": 0.043722263543959666,
+      "created_at": 65
+    }
+  ]
+}

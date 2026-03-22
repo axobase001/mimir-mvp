@@ -4,7 +4,7 @@ import uuid
 from fastapi import APIRouter, Request, HTTPException
 
 from ...llm.client import parse_json_response
-from ...types import Belief, BeliefCategory, BeliefSource, PEType, TypedPE
+from ...dtypes import Belief, BeliefCategory, BeliefSource, PEType, TypedPE
 
 router = APIRouter()
 log = logging.getLogger(__name__)
@@ -91,7 +91,7 @@ async def _live_search(state, user_msg: str, tags: list[str]) -> tuple[str, list
     if search_skill is None:
         registry = state.get("skill_registry")
         if registry:
-            search_skill = registry.get("brave_search")
+            search_skill = registry.get("web_search") or registry.get("brave_search")
 
     if search_skill is None:
         return "", []

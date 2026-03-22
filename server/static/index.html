@@ -1,40 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skuld</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Source+Sans+3:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
-<!-- Auth Screen -->
+<!-- ══════════════════════════════════════════════
+     AUTH SCREEN
+     ══════════════════════════════════════════════ -->
 <div id="auth-screen" style="display:none">
   <div class="auth-container">
     <div class="auth-brand">
       <span class="logo">SKULD</span>
       <span class="logo-sub">BRAIN-FIRST AI</span>
     </div>
-    <div id="auth-error" class="auth-error" style="display:none"></div>
+    <div class="auth-error" id="auth-error" style="display:none"></div>
     <form id="auth-form">
-      <input id="auth-email" type="email" placeholder="Email" required />
-      <input id="auth-password" type="password" placeholder="Password (min 8 chars)" required minlength="8" />
-      <input id="auth-name" type="text" placeholder="Display name (optional)" style="display:none" />
-      <button type="submit" id="auth-submit">Login</button>
+      <input id="auth-email" type="email" placeholder="邮箱" required>
+      <input id="auth-password" type="password" placeholder="密码" required minlength="8">
+      <input id="auth-name" type="text" placeholder="显示名称（可选）" style="display:none">
+      <button type="submit" id="auth-submit">登录</button>
       <p class="auth-toggle">
-        <span id="auth-toggle-text">Don't have an account?</span>
-        <a href="#" id="auth-toggle-link">Register</a>
+        <span id="auth-toggle-text">没有账号？</span>
+        <a href="#" id="auth-toggle-link">注册</a>
       </p>
     </form>
   </div>
 </div>
 
-<!-- Dashboard -->
+<!-- ══════════════════════════════════════════════
+     ONBOARDING SCREEN
+     ══════════════════════════════════════════════ -->
+<div id="onboarding-screen" style="display:none">
+  <div class="onboarding-container">
+
+    <!-- Step 1: 关注方向 -->
+    <div id="onb-step-1" class="onb-step">
+      <div class="onb-step-header">
+        <span class="onb-step-num">1 / 3</span>
+        <h1 class="onb-title">告诉Skuld你关注什么</h1>
+        <p class="onb-subtitle">这些方向会成为Brain的初始种子。之后SEC会自动找到最值得追踪的方向。</p>
+      </div>
+
+      <div class="onb-presets" id="onb-presets">
+        <button class="preset-tag" data-label="时政新闻" onclick="togglePreset(this)">时政新闻</button>
+        <button class="preset-tag" data-label="科技动态" onclick="togglePreset(this)">科技动态</button>
+        <button class="preset-tag" data-label="金融市场" onclick="togglePreset(this)">金融市场</button>
+        <button class="preset-tag" data-label="行业分析" onclick="togglePreset(this)">行业分析</button>
+        <button class="preset-tag" data-label="国际关系" onclick="togglePreset(this)">国际关系</button>
+        <button class="preset-tag" data-label="社会民生" onclick="togglePreset(this)">社会民生</button>
+      </div>
+
+      <div class="onb-custom-add">
+        <input id="onb-custom-input" type="text" placeholder="自定义方向（最多5个）" maxlength="50">
+        <button class="btn-outline" onclick="addCustomDirection()">添加</button>
+      </div>
+
+      <div class="onb-selected" id="onb-selected-list"></div>
+
+      <div class="onb-actions">
+        <button class="btn-primary" onclick="onbNext(1)" id="onb-next-1">下一步 &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Step 2: API配置 -->
+    <div id="onb-step-2" class="onb-step" style="display:none">
+      <div class="onb-step-header">
+        <span class="onb-step-num">2 / 3</span>
+        <h1 class="onb-title">连接你的API（可选）</h1>
+        <p class="onb-subtitle">默认使用我们的服务。填入你自己的Key可以节省我们的成本。</p>
+      </div>
+
+      <div class="onb-api-section">
+        <div class="onb-api-group">
+          <label class="onb-label">LLM模型</label>
+          <select id="onb-llm-provider" class="onb-select" onchange="onLLMProviderChange()">
+            <option value="deepseek" selected>DeepSeek</option>
+            <option value="gpt4o">GPT-4o</option>
+            <option value="claude">Claude</option>
+          </select>
+          <div class="onb-key-row">
+            <input id="onb-llm-key" type="password" placeholder="API Key" class="onb-input">
+            <button class="btn-outline" onclick="testLLMConnection()">测试连接</button>
+          </div>
+          <input id="onb-llm-base-url" type="text" placeholder="Base URL（默认自动填充）" class="onb-input" value="https://api.deepseek.com">
+          <span class="onb-test-result" id="llm-test-result"></span>
+        </div>
+
+        <div class="onb-api-group">
+          <label class="onb-label">搜索引擎</label>
+          <select id="onb-search-provider" class="onb-select" onchange="onSearchProviderChange()">
+            <option value="searxng" selected>内置SearXNG</option>
+            <option value="brave">Brave</option>
+            <option value="custom">自定义</option>
+          </select>
+          <div id="onb-search-key-row" class="onb-key-row" style="display:none">
+            <input id="onb-search-key" type="password" placeholder="API Key" class="onb-input">
+          </div>
+          <span class="onb-test-result" id="search-test-result"></span>
+        </div>
+      </div>
+
+      <div class="onb-actions onb-actions-split">
+        <button class="btn-ghost" onclick="onbSkipApi()">跳过，使用默认 &rarr;</button>
+        <button class="btn-primary" onclick="onbNext(2)">下一步 &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Step 3: 确认 -->
+    <div id="onb-step-3" class="onb-step" style="display:none">
+      <div class="onb-step-header">
+        <span class="onb-step-num">3 / 3</span>
+        <h1 class="onb-title">准备好了</h1>
+      </div>
+
+      <div class="onb-summary">
+        <div class="onb-summary-row">
+          <span class="onb-summary-label">关注方向</span>
+          <span class="onb-summary-value" id="onb-summary-directions"></span>
+        </div>
+        <div class="onb-summary-row">
+          <span class="onb-summary-label">LLM</span>
+          <span class="onb-summary-value" id="onb-summary-llm"></span>
+        </div>
+        <div class="onb-summary-row">
+          <span class="onb-summary-label">搜索</span>
+          <span class="onb-summary-value" id="onb-summary-search"></span>
+        </div>
+        <div class="onb-summary-row">
+          <span class="onb-summary-label">更新频率</span>
+          <span class="onb-summary-value">每10分钟</span>
+        </div>
+      </div>
+
+      <div class="onb-actions">
+        <button class="btn-primary btn-launch" onclick="launchBrain()">启动Brain &rarr;</button>
+      </div>
+      <div class="onb-error" id="onb-error" style="display:none"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     DASHBOARD SCREEN
+     ══════════════════════════════════════════════ -->
 <div id="dashboard-screen" style="display:none">
   <!-- Top bar -->
   <header class="topbar">
@@ -43,16 +161,20 @@
       <span class="logo-sub">BRAIN-FIRST AI</span>
     </div>
     <div class="topbar-center">
-      <div class="stat-badge">Cycle <span id="s-cycle">0</span></div>
-      <div class="stat-badge stat-beliefs">Beliefs <span id="s-beliefs">0</span></div>
+      <div class="stat-badge"><span class="stat-label" data-i18n="cycle">周期</span> <span id="s-cycle">0</span></div>
+      <div class="stat-badge stat-beliefs"><span class="stat-label" data-i18n="beliefs">信念</span> <span id="s-beliefs">0</span></div>
       <div class="stat-badge stat-sec">SEC <span id="s-clusters">0</span></div>
-      <div class="stat-badge stat-goals">Goals <span id="s-goals">0</span></div>
-      <div class="stat-badge stat-cost">$<span id="s-cost">0</span></div>
+      <div class="stat-badge stat-goals"><span class="stat-label" data-i18n="goals">目标</span> <span id="s-goals">0</span></div>
+      <div class="stat-badge stat-cost"><span class="stat-label" data-i18n="cost">成本</span> $<span id="s-cost">0</span></div>
     </div>
     <div class="topbar-right">
+      <button class="lang-toggle" id="lang-toggle" onclick="toggleLang()">EN</button>
+      <button class="btn-icon" id="settings-btn" onclick="showSettings()" title="设置">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6.5 1L7 3L5.5 4L3.5 3L2 5L3.5 6.5L3 8L1 8.5V10.5L3 11L3.5 12.5L2 14L4 15.5L5.5 14L7 14.5L7.5 16.5H9.5L10 14.5L11.5 14L13 15.5L15 14L13.5 12.5L14 11L16 10.5V8.5L14 8L13.5 6.5L15 5L13 3.5L11.5 4.5L10 3.5L9.5 1H6.5Z" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="8.5" cy="9.5" r="2" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+      </button>
       <span id="user-display-name"></span>
       <span id="user-plan" class="plan-badge"></span>
-      <button id="logout-btn" onclick="logout()">Logout</button>
+      <button id="logout-btn" onclick="logout()">退出</button>
     </div>
   </header>
 
@@ -61,12 +183,12 @@
     <!-- Left: Belief Graph -->
     <section class="panel panel-graph" id="graph-panel">
       <div class="panel-header">
-        <h2>Belief Graph</h2>
+        <h2 data-i18n="beliefGraph">信念图谱</h2>
         <div class="panel-legend">
-          <span class="legend-dot fact"></span><span class="legend-label">Fact</span>
-          <span class="legend-dot preference"></span><span class="legend-label">Preference</span>
-          <span class="legend-dot procedure"></span><span class="legend-label">Procedure</span>
-          <span class="legend-dot hypothesis"></span><span class="legend-label">Hypothesis</span>
+          <span class="legend-dot fact"></span><span class="legend-label" data-i18n="fact">事实</span>
+          <span class="legend-dot preference"></span><span class="legend-label" data-i18n="preference">偏好</span>
+          <span class="legend-dot procedure"></span><span class="legend-label" data-i18n="procedure">程序</span>
+          <span class="legend-dot hypothesis"></span><span class="legend-label" data-i18n="hypothesis">假设</span>
         </div>
       </div>
       <svg id="graph-svg"></svg>
@@ -75,7 +197,7 @@
     <!-- Right top: SEC Matrix -->
     <section class="panel panel-sec" id="sec-panel">
       <div class="panel-header">
-        <h2>SEC Attention Matrix</h2>
+        <h2 data-i18n="secMatrix">SEC注意力矩阵</h2>
         <span class="panel-badge" id="sec-pos-neg">0+ / 0&minus;</span>
       </div>
       <canvas id="sec-chart"></canvas>
@@ -84,43 +206,46 @@
     <!-- Right middle: Goals -->
     <section class="panel panel-goals" id="goals-panel">
       <div class="panel-header">
-        <h2>Goals</h2>
-        <button class="btn-small" onclick="toggleGoalForm()">+ Add</button>
+        <h2 data-i18n="goals">目标</h2>
+        <button class="btn-small" onclick="toggleGoalForm()">+ <span data-i18n="add">添加</span></button>
       </div>
       <div id="goals-list"></div>
       <div id="add-goal-form" style="display:none">
-        <input id="new-goal-input" placeholder="New goal..." />
-        <button onclick="addGoal()">Create</button>
+        <input id="new-goal-input" placeholder="新目标..." />
+        <button onclick="addGoal()">创建</button>
       </div>
     </section>
 
     <!-- Right bottom: Stats -->
     <section class="panel panel-stats" id="stats-panel">
-      <div class="panel-header"><h2>Learning Curve</h2></div>
+      <div class="panel-header"><h2 data-i18n="learningCurve">学习曲线</h2></div>
       <canvas id="learning-chart"></canvas>
       <div class="stats-row" id="learning-stats"></div>
       <div class="stats-row">
-        <span>Last deep cycle: <span id="last-cycle-time">&mdash;</span></span>
+        <span>最近深度周期: <span id="last-cycle-time">&mdash;</span></span>
       </div>
     </section>
   </main>
 
-  <!-- Chat toggle button -->
-  <button class="chat-toggle" id="chat-toggle" onclick="toggleChat()">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2h12v9H4l-2 2V2z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
-    Chat
-  </button>
+  <!-- Chat panel (fixed bottom left) -->
+  <div id="chat-bar" style="position:fixed; bottom:0; left:0; right:400px; background:#fff; border-top:1px solid rgba(0,0,0,0.06); z-index:500; display:flex; flex-direction:column;">
+    <div id="chat-messages-inline" style="max-height:250px; overflow-y:auto; padding:12px 2rem 0 2rem;"></div>
+    <div style="display:flex; gap:8px; padding:12px 2rem; align-items:center;">
+      <input id="chat-input-inline" type="text" placeholder="问Skuld..." style="flex:1; background:#FAFAF8; border:1px solid rgba(0,0,0,0.12); color:#1A1A1F; padding:10px 14px; border-radius:6px; font-family:'Source Sans 3',sans-serif; font-size:14px; outline:none;" />
+      <button id="chat-send-inline" onclick="sendChat()" style="background:#1A1A1F; color:#fff; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-family:'Source Sans 3',sans-serif; font-size:13px; font-weight:500;">发送</button>
+    </div>
+  </div>
 
   <!-- Chat drawer -->
   <div class="chat-drawer" id="chat-drawer">
     <div class="chat-header">
-      <h3>Chat with Skuld</h3>
+      <h3 data-i18n="chat">对话</h3>
       <button class="chat-close-btn" onclick="toggleChat()">&times;</button>
     </div>
     <div id="chat-messages"></div>
     <div class="chat-input-row">
-      <input id="chat-input" placeholder="Ask Skuld..." />
-      <button id="chat-send">Send</button>
+      <input id="chat-input" placeholder="问Skuld..." data-i18n-placeholder="askSkuld" />
+      <button id="chat-send" data-i18n="send">发送</button>
     </div>
   </div>
 
@@ -138,6 +263,204 @@
 
   <!-- Notifications -->
   <div id="notifications"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SETTINGS SCREEN
+     ══════════════════════════════════════════════ -->
+<div id="settings-screen" style="display:none">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="btn-back" onclick="hideSettings()">&larr; 返回</button>
+      <span class="logo">SKULD</span>
+      <span class="logo-sub" data-i18n="settings">设置</span>
+    </div>
+    <div class="topbar-right">
+      <button class="lang-toggle" onclick="toggleLang()" id="lang-toggle-settings">EN</button>
+    </div>
+  </header>
+
+  <div class="settings-body">
+    <!-- Settings tabs -->
+    <div class="settings-tabs">
+      <button class="settings-tab active" onclick="switchSettingsTab('brain', this)">Brain</button>
+      <button class="settings-tab" onclick="switchSettingsTab('api', this)">API</button>
+      <button class="settings-tab" onclick="switchSettingsTab('notifications', this)">通知</button>
+      <button class="settings-tab" onclick="switchSettingsTab('account', this)">账户</button>
+    </div>
+
+    <!-- Brain tab -->
+    <div id="settings-tab-brain" class="settings-panel">
+      <div class="settings-section">
+        <h3>种子信念</h3>
+        <div id="settings-seed-beliefs"></div>
+        <div class="settings-add-row">
+          <input id="settings-new-belief" type="text" placeholder="添加新种子信念..." class="onb-input">
+          <button class="btn-primary btn-sm" onclick="addSettingsBelief()">添加</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>EXOGENOUS 目标</h3>
+        <div id="settings-exo-goals"></div>
+        <div class="settings-add-row">
+          <input id="settings-new-goal" type="text" placeholder="添加新目标..." class="onb-input">
+          <button class="btn-primary btn-sm" onclick="addSettingsGoal()">添加</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Cycle频率</h3>
+        <select id="settings-cycle-freq" class="onb-select">
+          <option value="5">每5分钟</option>
+          <option value="10" selected>每10分钟</option>
+          <option value="30">每30分钟</option>
+          <option value="60">每60分钟</option>
+        </select>
+      </div>
+
+      <div class="settings-section">
+        <button class="btn-primary" onclick="triggerManualCycle()">手动触发Cycle</button>
+      </div>
+    </div>
+
+    <!-- API tab -->
+    <div id="settings-tab-api" class="settings-panel" style="display:none">
+      <div class="settings-section">
+        <div class="onb-api-group">
+          <label class="onb-label">LLM模型</label>
+          <select id="settings-llm-provider" class="onb-select">
+            <option value="deepseek" selected>DeepSeek</option>
+            <option value="gpt4o">GPT-4o</option>
+            <option value="claude">Claude</option>
+          </select>
+          <div class="onb-key-row">
+            <input id="settings-llm-key" type="password" placeholder="API Key" class="onb-input">
+            <button class="btn-outline" onclick="testSettingsLLM()">测试连接</button>
+          </div>
+          <input id="settings-llm-base-url" type="text" placeholder="Base URL" class="onb-input" value="https://api.deepseek.com">
+          <span class="onb-test-result" id="settings-llm-test-result"></span>
+        </div>
+
+        <div class="onb-api-group">
+          <label class="onb-label">搜索引擎</label>
+          <select id="settings-search-provider" class="onb-select">
+            <option value="searxng" selected>内置SearXNG</option>
+            <option value="brave">Brave</option>
+            <option value="custom">自定义</option>
+          </select>
+          <div id="settings-search-key-row" class="onb-key-row">
+            <input id="settings-search-key" type="password" placeholder="API Key" class="onb-input">
+          </div>
+          <span class="onb-test-result" id="settings-search-test-result"></span>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <button class="btn-primary" onclick="saveApiSettings()">保存</button>
+      </div>
+    </div>
+
+    <!-- Notifications tab -->
+    <div id="settings-tab-notifications" class="settings-panel" style="display:none">
+      <div class="settings-section">
+        <h3>邮件通知 — SMTP配置</h3>
+        <input id="email-smtp-host" type="text" placeholder="SMTP Host（如 smtp.gmail.com）" class="onb-input">
+        <div style="display:flex;gap:8px;">
+          <input id="email-smtp-port" type="number" placeholder="端口" class="onb-input" value="587" style="width:100px;">
+          <input id="email-smtp-user" type="text" placeholder="SMTP用户名" class="onb-input" style="flex:1;">
+        </div>
+        <input id="email-smtp-pass" type="password" placeholder="SMTP密码" class="onb-input">
+        <div style="display:flex;gap:8px;">
+          <input id="email-from-addr" type="email" placeholder="发送地址" class="onb-input" style="flex:1;">
+          <input id="email-to-addr" type="email" placeholder="接收地址" class="onb-input" style="flex:1;">
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>通知类型</h3>
+        <div class="email-toggle-row">
+          <div>
+            <div class="email-toggle-label">每日总结</div>
+            <div class="email-toggle-sub">每天早上发送Brain状态概要</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="email-daily-digest" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="email-toggle-row">
+          <div>
+            <div class="email-toggle-label">每周总结</div>
+            <div class="email-toggle-sub">每周一早上发送本周概要</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="email-weekly-digest" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="email-toggle-row">
+          <div>
+            <div class="email-toggle-label">实时发现</div>
+            <div class="email-toggle-sub">Brain发现重要信息时立即通知</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="email-realtime-alerts" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>发送时间</h3>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <select id="email-digest-hour" class="onb-select" style="width:140px;">
+            <option value="6">06:00</option>
+            <option value="7">07:00</option>
+            <option value="8" selected>08:00</option>
+            <option value="9">09:00</option>
+            <option value="10">10:00</option>
+            <option value="12">12:00</option>
+            <option value="18">18:00</option>
+            <option value="20">20:00</option>
+          </select>
+          <span style="font-size:13px;color:var(--text3);">每日/每周总结发送时间</span>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="email-actions-row">
+          <button class="btn-primary" onclick="saveEmailSettings(false)">保存设置</button>
+          <button class="btn-outline" onclick="saveEmailSettings(true)">发送测试邮件</button>
+        </div>
+        <div class="settings-msg" id="email-settings-msg"></div>
+      </div>
+    </div>
+
+    <!-- Account tab -->
+    <div id="settings-tab-account" class="settings-panel" style="display:none">
+      <div class="settings-section">
+        <h3>修改密码</h3>
+        <input id="settings-old-password" type="password" placeholder="当前密码" class="onb-input">
+        <input id="settings-new-password" type="password" placeholder="新密码（至少8位）" class="onb-input" minlength="8">
+        <input id="settings-confirm-password" type="password" placeholder="确认新密码" class="onb-input">
+        <button class="btn-primary btn-sm" onclick="changePassword()">修改密码</button>
+        <div class="settings-msg" id="password-msg"></div>
+      </div>
+
+      <div class="settings-section">
+        <h3>数据</h3>
+        <button class="btn-outline" onclick="exportBrainData()">导出Brain数据</button>
+      </div>
+
+      <div class="settings-section settings-danger">
+        <h3>危险操作</h3>
+        <button class="btn-danger" onclick="resetBrain()">重置Brain</button>
+        <p class="settings-hint">这将删除所有信念、目标和学习数据。此操作不可逆。</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script src="/static/app.js"></script>

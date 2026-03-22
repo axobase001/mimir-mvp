@@ -11,7 +11,7 @@ Verifies:
 import json
 
 from mimir.brain.belief_graph import BeliefGraph
-from mimir.types import Belief, BeliefCategory, BeliefSource
+from mimir.dtypes import Belief, BeliefCategory, BeliefSource
 from mimir.config import MimirConfig
 
 

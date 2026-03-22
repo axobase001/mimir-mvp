@@ -1,6 +1,6 @@
 from .base import Skill, SkillRegistry, SkillResult
 from .registry import SmartSkillRegistry
-from .search import BraveSearchSkill
+from .search import WebSearchSkill, BraveSearchSkill
 from .file_io import FileReadSkill, FileWriteSkill
 from .code_exec import CodeExecSkill
 from .document import DocumentSkill
@@ -19,12 +19,15 @@ from .json_query import JSONQuerySkill
 from .translate import TranslateSkill
 from .summarize_url import SummarizeURLSkill
 from .custom_tool import CustomToolManager
+from .outreach import OutreachRateLimiter, OutreachTracker, FollowUpManager
+from .scholar_search import ScholarSearchSkill
 
 __all__ = [
     "Skill",
     "SkillRegistry",
     "SkillResult",
     "SmartSkillRegistry",
+    "WebSearchSkill",
     "BraveSearchSkill",
     "FileReadSkill",
     "FileWriteSkill",
@@ -46,4 +49,7 @@ __all__ = [
     "TranslateSkill",
     "SummarizeURLSkill",
     "CustomToolManager",
+    "OutreachRateLimiter",
+    "OutreachTracker",
+    "FollowUpManager",
 ]

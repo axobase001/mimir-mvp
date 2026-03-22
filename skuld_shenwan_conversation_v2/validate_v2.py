@@ -21,7 +21,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root.parent))
 
 from mimir.config import MimirConfig
-from mimir.types import Belief, BeliefSource
+from mimir.dtypes import Belief, BeliefSource
 from mimir.brain.belief_graph import BeliefGraph
 from mimir.brain.sec_matrix import SECMatrix
 from mimir.brain.prediction import PredictionEngine

@@ -2,7 +2,7 @@ import time
 
 from fastapi import APIRouter, Request, HTTPException
 
-from ...types import Goal, GoalOrigin, GoalStatus
+from ...dtypes import Goal, GoalOrigin, GoalStatus
 from ...core.scheduled_tasks import ScheduledTask
 
 router = APIRouter()
@@ -65,6 +65,11 @@ async def add_goal(request: Request, data: dict):
         origin=GoalOrigin.EXOGENOUS,
     )
     gg.goals[goal.id] = goal
+
+    # Immediately persist — goals must survive restarts
+    scheduler = request.app.state.scheduler
+    scheduler._save_brain_state(user_id)
+
     return {"action": "created", "goal_id": goal.id}
 
 

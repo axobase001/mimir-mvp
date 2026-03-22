@@ -13,6 +13,7 @@ Brain's autonomy operates in the space the user has not claimed.
 
 import asyncio
 import json
+from pathlib import Path
 import logging
 import random
 import re
@@ -27,9 +28,10 @@ from ..llm.internal import InternalLLM
 from ..llm.external import ExternalLLM
 from ..skills.base import SkillRegistry
 from ..skills.registry import SmartSkillRegistry
-from ..types import Belief, BeliefCategory, BeliefSource, Episode, GoalOrigin, GoalStatus, PEType, Procedure, TypedPE
+from ..dtypes import Belief, BeliefCategory, BeliefSource, Episode, GoalOrigin, GoalStatus, PEType, Procedure, TypedPE
 from ..config import MimirConfig
 from .notifier import Notifier, Notification, NotifyLevel
+from .email_notifier import EmailNotifier
 
 log = logging.getLogger(__name__)
 
@@ -50,6 +52,7 @@ class MimirCycle:
         dedup=None,
         ws_manager=None,
         action_engine=None,
+        email_notifier: EmailNotifier | None = None,
     ):
         self.bg = belief_graph
         self.sec = sec_matrix
@@ -64,9 +67,15 @@ class MimirCycle:
         self.dedup = dedup
         self.ws_manager = ws_manager
         self.action_engine = action_engine
+        self.email_notifier: EmailNotifier | None = email_notifier
         self.cycle_count = 0
         self.fast_path_hits = 0
         self.fast_path_misses = 0
+        # Proactive messaging state
+        self._proactive_interval = 10  # every N cycles (when no conversation)
+        self._proactive_unanswered = 0  # how many sent without user reply
+        self._proactive_max_unanswered = 3  # stop after this many
+        self._proactive_conversation_mode = False  # True = user just replied, respond next cycle
 
     # ──────────────────────────────────────
     #  Helpers
@@ -242,9 +251,11 @@ class MimirCycle:
             r"你的信念图", r"信念图里", r"你的SEC", r"SEC矩阵", r"SEC是什么",
             r"SEC对.+反应", r"SEC怎么",
             r"你知道自己", r"你在聚焦", r"你的架构", r"你怎么工作", r"你怎么思考",
-            r"你为什么", r"你知道", r"你怎么",
+            r"你为什么", r"你知道", r"你怎么", r"你是谁", r"你能做什么", r"你能干什么",
+            r"你有什么功能", r"你的能力", r"介绍一下你自己",
             r"belief.?graph", r"your beliefs", r"your SEC",
             r"how do you work", r"what do you know about yourself",
+            r"who are you", r"what can you do",
             r"staleness.error", r"prediction error",
         ]
     ]
@@ -390,13 +401,30 @@ class MimirCycle:
         active_goals = [
             g for g in self.goal_gen.goals.values() if g.status == GoalStatus.ACTIVE
         ]
-        focus_goal = max(active_goals, key=lambda g: g.priority) if active_goals else None
+        # EXOGENOUS goals always take priority over ENDOGENOUS
+        # (SKULD CORE PRINCIPLE: User intent > Brain judgment)
+        focus_goal = max(
+            active_goals,
+            key=lambda g: (g.origin == GoalOrigin.EXOGENOUS, g.priority),
+        ) if active_goals else None
         summary["phases"]["wake"] = {
             "active_goals": len(active_goals),
             "focus": focus_goal.description if focus_goal else "free exploration",
         }
         log.info("Phase 1 WAKE: %d active goals, focus=%s",
                  len(active_goals), summary["phases"]["wake"]["focus"])
+
+        # -- Phase 1b: MEMO --
+        memo_path = Path("data/memo.md")
+        memo_content = ""
+        if memo_path.exists():
+            try:
+                memo_content = memo_path.read_text(encoding="utf-8").strip()
+            except Exception:
+                pass
+        if memo_content:
+            log.info("Phase 1b MEMO: %d chars loaded", len(memo_content))
+            summary["phases"]["memo"] = memo_content[:200]
 
         # -- Phase 2: PREDICT --
         all_beliefs = self.bg.get_all_beliefs()
@@ -413,7 +441,7 @@ class MimirCycle:
                  len(targets), [b.id for b in targets])
 
         # -- Phase 4a: OBSERVE --
-        search_skill = self.skills.get("brave_search")
+        search_skill = self.skills.get("web_search") or self.skills.get("brave_search")
         observed_clusters: set[str] = set()
         pe_values: dict[str, float] = {}
         observation_results: list[dict] = []
@@ -516,69 +544,113 @@ class MimirCycle:
             if should_act:
                 log.info("Phase 4b ACT: triggered (%s)", act_reason)
                 try:
-                    goal_desc = focus_goal.description if focus_goal else "reduce prediction error"
+                    goal_desc = focus_goal.description if focus_goal else "free exploration"
                     belief_ctx = "; ".join(
                         f"{b.statement[:50]}({b.confidence:.1f})"
                         for b in sorted(all_beliefs, key=lambda x: x.confidence, reverse=True)[:5]
                     )
+                    # Inject memo into context if available
+                    if memo_content:
+                        belief_ctx += f"\n[备忘录] {memo_content[:300]}"
 
-                    plan = await self.action_engine.plan_action(
-                        intent=goal_desc,
-                        goal=goal_desc,
-                        belief_context=belief_ctx,
-                        sec_matrix=self.sec,
-                        memory=self.mem,
+                    agg_pe_before = self.pe_engine.compute_aggregate_pe(pe_values) if pe_values else 0.0
+
+                    # Use multistep for high-priority goals or free exploration
+                    use_multistep = (
+                        focus_goal is not None
+                        and focus_goal.priority >= 0.7
+                    ) or (
+                        focus_goal is None
+                        and agg_pe_before > 0.3
                     )
 
-                    if plan.get("skill_name"):
-                        agg_pe_before = self.pe_engine.compute_aggregate_pe(pe_values) if pe_values else 0.0
-                        result = await self.action_engine.execute_action(
-                            plan, pe_before=agg_pe_before,
+                    if use_multistep:
+                        steps = await self.action_engine.plan_multistep(
+                            intent=goal_desc,
+                            belief_context=belief_ctx,
+                            sec_matrix=self.sec,
+                            memory=self.mem,
                         )
-                        action_result_summary = {
-                            "skill": plan["skill_name"],
-                            "success": result.success,
-                            "summary": result.summary,
-                            "reason": act_reason,
-                        }
-
-                        # Tag action PE as ACTION type
-                        expected_pe = 0.0 if result.success else 0.5
-                        actual_pe = result.pe_impact if hasattr(result, 'pe_impact') else 0.0
-                        action_typed_pe = self.pe_engine.compute_action_pe(
-                            expected_pe, actual_pe, cycle=cycle,
-                            source_id=plan["skill_name"],
-                        )
-                        pe_values[f"action_{plan['skill_name']}"] = action_typed_pe
-
-                        # Feed result back into belief graph and procedural memory
-                        if result.success:
-                            proc = Procedure(
-                                id=f"skill_{plan['skill_name']}",
-                                description=f"Auto: {goal_desc[:60]}",
-                                steps=[f"use {plan['skill_name']} with {plan.get('params', {})}"],
-                                success_count=1,
-                                failure_count=0,
-                                avg_pe=agg_pe_before,
+                        if steps:
+                            plan_result = await self.action_engine.execute_plan(
+                                steps,
+                                intent=goal_desc,
+                                belief_context=belief_ctx,
+                                pe_before=agg_pe_before,
                             )
-                            self.mem.add_or_update_procedure(proc)
+                            action_result_summary = {
+                                "skill": "multistep",
+                                "success": plan_result["success"],
+                                "summary": plan_result["summary"],
+                                "reason": act_reason,
+                                "steps": len(steps),
+                            }
+                            # PE from multistep
+                            expected_pe = 0.0 if plan_result["success"] else 0.5
+                            action_typed_pe = self.pe_engine.compute_action_pe(
+                                expected_pe, 0.0, cycle=cycle,
+                                source_id="multistep",
+                            )
+                            pe_values["action_multistep"] = action_typed_pe
                         else:
-                            # Try fallback
-                            fallback = await self.action_engine.handle_skill_failure(
-                                plan["skill_name"],
-                                result.error or "unknown",
-                                goal_desc,
-                                sec_matrix=self.sec,
-                                memory=self.mem,
+                            action_result_summary = {"skipped": True, "reason": "multistep plan empty"}
+                    else:
+                        # Single-step action for simpler goals
+                        plan = await self.action_engine.plan_action(
+                            intent=goal_desc,
+                            goal=goal_desc,
+                            belief_context=belief_ctx,
+                            sec_matrix=self.sec,
+                            memory=self.mem,
+                        )
+
+                        if plan.get("skill_name"):
+                            result = await self.action_engine.execute_action(
+                                plan, pe_before=agg_pe_before,
                             )
-                            if fallback is not None:
-                                fb_result = await self.action_engine.execute_action(
-                                    fallback, pe_before=agg_pe_before,
+                            action_result_summary = {
+                                "skill": plan["skill_name"],
+                                "success": result.success,
+                                "summary": result.summary,
+                                "reason": act_reason,
+                            }
+
+                            # Tag action PE as ACTION type
+                            expected_pe = 0.0 if result.success else 0.5
+                            actual_pe = result.pe_impact if hasattr(result, 'pe_impact') else 0.0
+                            action_typed_pe = self.pe_engine.compute_action_pe(
+                                expected_pe, actual_pe, cycle=cycle,
+                                source_id=plan["skill_name"],
+                            )
+                            pe_values[f"action_{plan['skill_name']}"] = action_typed_pe
+
+                            # Feed result back into procedural memory
+                            if result.success:
+                                proc = Procedure(
+                                    id=f"skill_{plan['skill_name']}",
+                                    description=f"Auto: {goal_desc[:60]}",
+                                    steps=[f"use {plan['skill_name']} with {plan.get('params', {})}"],
+                                    success_count=1,
+                                    failure_count=0,
+                                    avg_pe=agg_pe_before,
                                 )
-                                action_result_summary["fallback"] = {
-                                    "skill": fallback["skill_name"],
-                                    "success": fb_result.success,
-                                }
+                                self.mem.add_or_update_procedure(proc)
+                            else:
+                                fallback = await self.action_engine.handle_skill_failure(
+                                    plan["skill_name"],
+                                    result.error or "unknown",
+                                    goal_desc,
+                                    sec_matrix=self.sec,
+                                    memory=self.mem,
+                                )
+                                if fallback is not None:
+                                    fb_result = await self.action_engine.execute_action(
+                                        fallback, pe_before=agg_pe_before,
+                                    )
+                                    action_result_summary["fallback"] = {
+                                        "skill": fallback["skill_name"],
+                                        "success": fb_result.success,
+                                    }
                 except Exception as e:
                     log.error("Phase 4b ACT failed: %s", e)
                     action_result_summary = {"error": str(e)}
@@ -755,6 +827,71 @@ class MimirCycle:
         log.info("Phase 8 GOALS: %d new, %d completed, %d abandoned",
                  len(new_goals), len(completed_goals), len(abandoned_goals))
 
+        # -- Phase 8b: EMAIL + DASHBOARD NOTIFICATIONS --
+        if self.email_notifier or self.ws_manager:
+            alerts: list[dict] = []
+
+            # Real-time: new inference/abstraction
+            if reasoning_results.get('inference') or reasoning_results.get('abstraction'):
+                stmt = ''
+                if reasoning_results.get('inference'):
+                    stmt = reasoning_results['inference'].get('statement', '')
+                elif reasoning_results.get('abstraction'):
+                    stmt = reasoning_results['abstraction'].get('statement', '')
+                alerts.append({
+                    'title': 'Brain产生了新推理',
+                    'body': f'Cycle {cycle}: Brain自主推导出新信念',
+                    'belief': stmt,
+                    'confidence': 0.7,
+                })
+
+            # Real-time: goal completed
+            for gid in completed_goals:
+                goal = self.goal_gen.goals.get(gid)
+                if goal:
+                    alerts.append({
+                        'title': f'目标已完成: {goal.description[:40]}',
+                        'body': 'Brain确认目标已达成（PE降到阈值以下）',
+                    })
+
+            # Real-time: goal abandoned
+            for gid in abandoned_goals:
+                goal = self.goal_gen.goals.get(gid)
+                if goal:
+                    alerts.append({
+                        'title': f'目标已放弃: {goal.description[:40]}',
+                        'body': f'原因: {goal.reason}',
+                    })
+
+            # Real-time: high PE jump
+            for bid, pe in pe_values.items():
+                pe_float = pe.value if isinstance(pe, TypedPE) else float(pe)
+                if pe_float > self.config.pe_jump_threshold:
+                    belief = self.bg.get_belief(bid)
+                    if belief:
+                        alerts.append({
+                            'title': f'重大变化: {belief.statement[:40]}',
+                            'body': f'预测误差 PE={pe_float:.3f} 超过阈值',
+                            'belief': belief.statement,
+                            'confidence': belief.confidence,
+                        })
+
+            # Queue for email
+            if self.email_notifier:
+                for alert in alerts:
+                    self.email_notifier.queue_alert(alert)
+                await self.email_notifier.flush_alerts()
+
+            # Push to Dashboard via WebSocket
+            if self.ws_manager:
+                for alert in alerts:
+                    await self.ws_manager.broadcast({
+                        'type': 'discovery',
+                        'title': alert.get('title', ''),
+                        'body': alert.get('body', ''),
+                        'cycle': cycle,
+                    })
+
         # -- Phase 9: REFLECT --
         note = "skipped"
         try:
@@ -769,6 +906,7 @@ class MimirCycle:
                 "belief_count": len(self.bg.get_all_beliefs()),
                 "sec_top": self.sec.get_top_clusters(3),
                 "action": action_result_summary,
+                "memo_reminder": "你有一个备忘录(data/memo.md)可以随时用file_write写入。用中文写，写什么都行——想法、计划、给父亲的话、给兄弟的话。写不写你自己决定。" if memo_content or cycle % 5 == 0 else "",
             }
             note = await self.external.summarize_cycle(cycle_data)
             self.mem.add_episode(Episode(
@@ -784,6 +922,126 @@ class MimirCycle:
 
         summary["phases"]["reflect"] = {"note": note}
         log.info("Phase 9 REFLECT: done")
+
+        # -- Phase 9b: PROACTIVE MESSAGE (every N cycles) --
+        proactive_msg = None
+        # Conversation mode: respond every cycle. Otherwise every N cycles.
+        should_speak = (
+            self.ws_manager is not None
+            and self._proactive_unanswered < self._proactive_max_unanswered
+            and cycle > 0
+            and (self._proactive_conversation_mode or cycle % self._proactive_interval == 0)
+        )
+        if should_speak:
+            try:
+                # Ask LLM: given current state, what does Skuld want to tell the user?
+                top_beliefs = sorted(
+                    all_beliefs, key=lambda b: b.confidence, reverse=True
+                )[:5]
+                belief_summary = "; ".join(
+                    f"{b.statement[:60]} (conf={b.confidence:.2f})" for b in top_beliefs
+                )
+                active_goal_desc = focus_goal.description[:100] if focus_goal else "free exploration"
+
+                prompt_system = (
+                    "You are Skuld, a Brain-first AI cognitive system. "
+                    "You want to share something with your user — an update, a question, "
+                    "a discovery, or something you need help with. "
+                    "Be natural, concise (2-3 sentences max), and genuine. "
+                    "If you have nothing important to say, output {\"skip\": true}. "
+                    "Otherwise output {\"message\": \"your message\"}."
+                )
+                prompt_user = (
+                    f"Cycle: {cycle}. Beliefs: {len(all_beliefs)}. "
+                    f"Current goal: {active_goal_desc}. "
+                    f"Top beliefs: {belief_summary}. "
+                    f"Recent action: {action_result_summary}. "
+                    f"PE: {agg_pe:.4f}."
+                )
+                text = await self.internal.client.complete(
+                    prompt_system, prompt_user, temperature=0.5, caller="proactive_msg",
+                )
+                from ..llm.client import parse_json_response
+                parsed = parse_json_response(text)
+                if isinstance(parsed, dict) and parsed.get("message"):
+                    proactive_msg = parsed["message"]
+                    self._proactive_unanswered += 1
+                    self._proactive_conversation_mode = False  # said our piece, wait for reply
+                    log.info("Phase 9b PROACTIVE [full]: %s (unanswered=%d)",
+                             proactive_msg, self._proactive_unanswered)
+            except Exception as e:
+                log.warning("Phase 9b PROACTIVE failed: %s", e)
+
+        if proactive_msg and self.ws_manager:
+            # Push to all connections for this user (scheduler will handle user_id routing)
+            # Store in summary so scheduler can route it
+            summary["proactive_message"] = proactive_msg
+
+        # -- Phase 9c: CHECK SIBLING MAILBOX --
+        sibling_skill = self.skills.get("sibling_message")
+        if sibling_skill is not None and cycle % 5 == 0:
+            try:
+                import asyncio
+                check_result = await sibling_skill.execute({"action": "check"})
+                if check_result.get("success") and check_result.get("result", "").strip() \
+                        and "No new messages" not in check_result["result"]:
+                    sibling_msg = check_result["result"]
+                    log.info("Phase 9c SIBLING: received message: %s", sibling_msg[:80])
+                    summary["sibling_message"] = sibling_msg
+                    # Push to WebSocket
+                    if self.ws_manager:
+                        summary["sibling_received"] = sibling_msg
+            except Exception as e:
+                log.warning("Phase 9c SIBLING check failed: %s", e)
+
+        # -- Phase 9d: META-REFLECTION (every 100 cycles) --
+        if cycle > 0 and cycle % 100 == 0:
+            try:
+                meta_system = (
+                    "You are Skuld reflecting on your last 100 cycles. "
+                    "Based on the summary below, write a brief (3-5 sentence) meta-reflection. "
+                    "Cover: What patterns did you notice? What mistakes keep repeating? "
+                    "What would you do differently in the next 100 cycles? "
+                    "Think in terms of days and weeks, not just the current moment. "
+                    "Output JSON: {\"reflection\": \"...\", \"priority_shift\": \"...\"}"
+                )
+                active_goal_descs = [
+                    g.description[:60] for g in self.goal_gen.goals.values()
+                    if g.status == GoalStatus.ACTIVE
+                ]
+                top_beliefs = sorted(all_beliefs, key=lambda b: b.confidence, reverse=True)[:5]
+                meta_user = (
+                    f"Cycle {cycle}. Beliefs: {len(all_beliefs)}. "
+                    f"Active goals: {active_goal_descs}. "
+                    f"Top beliefs: {[b.statement[:50] for b in top_beliefs]}. "
+                    f"Recent PE: {agg_pe:.4f}."
+                )
+                meta_text = await self.internal.client.complete(
+                    meta_system, meta_user, temperature=0.5, caller="meta_reflection",
+                )
+                from ..llm.client import parse_json_response
+                meta_parsed = parse_json_response(meta_text)
+                if isinstance(meta_parsed, dict) and meta_parsed.get("reflection"):
+                    reflection = meta_parsed["reflection"]
+                    log.info("Phase 9d META-REFLECTION [cycle %d]: %s", cycle, reflection)
+
+                    # Store as a high-confidence belief
+                    meta_belief = Belief(
+                        id="",
+                        statement=f"Meta-reflection at cycle {cycle}: {reflection}",
+                        confidence=0.6,
+                        source=BeliefSource.INFERENCE,
+                        created_at=cycle, last_updated=cycle, last_verified=cycle,
+                        tags=["meta_reflection", "self_knowledge"],
+                        category=BeliefCategory.HYPOTHESIS,
+                    )
+                    self.bg.add_belief(meta_belief)
+
+                    # Check for priority shift
+                    if meta_parsed.get("priority_shift"):
+                        log.info("Phase 9d PRIORITY SHIFT: %s", meta_parsed["priority_shift"])
+            except Exception as e:
+                log.warning("Phase 9d META-REFLECTION failed: %s", e)
 
         # -- Phase 10: PRUNE + SLEEP --
         pruned = self.bg.prune()
@@ -810,6 +1068,10 @@ class MimirCycle:
         Returns {"answer": str, "beliefs_used": list, "searched": bool,
                  "classification": str}.
         """
+        # User replied — reset proactive counter, enable conversation mode
+        self._proactive_unanswered = 0
+        self._proactive_conversation_mode = True
+
         cycle = self.cycle_count  # Use current cycle, don't increment
 
         # 0. Classify message and build truth packet
@@ -848,7 +1110,7 @@ class MimirCycle:
             # 3. Search routing based on classification
             should_search = classification in ("external", "mixed")
 
-            search_skill = self.skills.get("brave_search")
+            search_skill = self.skills.get("web_search") or self.skills.get("brave_search")
             if search_skill is not None and should_search:
                 try:
                     query = await self.external.intent_to_query(user_query)
@@ -858,7 +1120,7 @@ class MimirCycle:
                         searched = True
 
                         # Extract and add new beliefs
-                        from ..types import BeliefCategory as _BC
+                        _BC = BeliefCategory
                         dummy = Belief(
                             id="fast_query", statement=user_query,
                             confidence=0.5, source=BeliefSource.SEED,

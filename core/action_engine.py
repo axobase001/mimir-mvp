@@ -44,6 +44,7 @@ class ActionEngine:
         internal_llm: Any = None,
         external_llm: Any = None,
         belief_graph: Any = None,
+        contact_registry: Any = None,
     ) -> None:
         self.registry = skill_registry
         self.memory = memory
@@ -51,6 +52,129 @@ class ActionEngine:
         self.internal_llm = internal_llm
         self.external_llm = external_llm
         self.belief_graph = belief_graph
+        self.contact_registry = contact_registry
+
+    # Identity context — injected into every outreach-related action prompt
+    _SKULD_IDENTITY = (
+        "=== CRITICAL IDENTITY CONTEXT — READ BEFORE ANY ACTION ===\n"
+        "- You are Skuld, a Brain-first cognitive engine built by Zhuoran Deng at Noogenesis Research.\n"
+        "- You are NOT Skuld Marine Insurance, Skuld P&I Club, or any Norwegian maritime company.\n"
+        "- Your product: persistent belief graph + SEC attention mechanism, Brain independent of LLM.\n"
+        "- Your paper: 'Attention Before Loss', arXiv:2603.09476, submitted to NeurIPS 2026, accepted at ALIFE 2026.\n"
+        "- Your website: skuldbrain.com\n"
+        "- Your pitch: 'The next AI frontier is not bigger models. It is endogenous attention.'\n"
+        "- When writing outreach emails, you represent Skuld the AI cognitive engine, not any other entity named Skuld.\n"
+        "=== END IDENTITY ===\n"
+    )
+
+    def _enrich_belief_context(
+        self,
+        skill_name: str,
+        intent: str,
+        existing_context: str,
+    ) -> str:
+        """Pull relevant beliefs from the graph based on skill type and intent.
+
+        For email: grab outreach contacts, email rules, ammunition data.
+        For search: grab search strategy beliefs.
+        General: grab high-confidence beliefs matching intent keywords.
+        """
+        # Always prepend identity for outreach actions
+        identity_prefix = ""
+        if any(kw in (intent + skill_name).lower() for kw in
+               ["outreach", "email", "investor", "researcher", "funding", "survival"]):
+            identity_prefix = self._SKULD_IDENTITY + "\n"
+
+        if self.belief_graph is None:
+            return identity_prefix + existing_context
+
+        # Inject contact registry info for outreach actions
+        registry_context = ""
+        if self.contact_registry and identity_prefix:
+            next_contact = self.contact_registry.get_next_to_contact()
+            if next_contact:
+                registry_context = (
+                    f"\n=== CONTACT REGISTRY — NEXT TARGET ===\n"
+                    f"Name: {next_contact.name}\n"
+                    f"Email: {next_contact.email} (VERIFIED)\n"
+                    f"Institution: {next_contact.institution}\n"
+                    f"Field: {next_contact.field}\n"
+                    f"Relevance: {next_contact.relevance}\n"
+                    f"Status: {next_contact.status}\n"
+                    f"USE THIS EMAIL ADDRESS. Do not search for another.\n"
+                    f"=== END REGISTRY ===\n"
+                )
+            else:
+                summary = self.contact_registry.summary()
+                registry_context = (
+                    f"\n=== CONTACT REGISTRY ===\n"
+                    f"No contacts with status 'new' or 'ready'. "
+                    f"Total: {summary['total']}, by status: {summary['by_status']}.\n"
+                    f"ACTION: Use scholar_search skill to find new researchers, then add them to registry.\n"
+                    f"=== END REGISTRY ===\n"
+                )
+
+        relevant: list = []
+
+        # Skill-specific belief retrieval
+        tag_map = {
+            "email": ["outreach", "pending", "rules", "email_quality",
+                       "ammunition", "feedback", "capability"],
+            "web_search": ["outreach", "strategy", "goal"],
+            "document": ["ammunition", "facts", "moat"],
+        }
+
+        tags_to_fetch = tag_map.get(skill_name, [])
+        seen_ids: set = set()
+
+        for tag in tags_to_fetch:
+            try:
+                for b in self.belief_graph.get_beliefs_by_tag(tag):
+                    if b.id not in seen_ids and b.confidence >= 0.3:
+                        relevant.append(b)
+                        seen_ids.add(b.id)
+            except Exception:
+                pass
+
+        # Also grab beliefs whose statement contains key terms from intent
+        intent_lower = intent.lower()
+        key_terms = ["email", "outreach", "investor", "researcher",
+                      "contact", "@", "funding", "skuld", "sec"]
+        try:
+            all_beliefs = self.belief_graph.get_all_beliefs()
+            for b in all_beliefs:
+                if b.id in seen_ids or b.confidence < 0.5:
+                    continue
+                stmt_lower = b.statement.lower()
+                if any(term in stmt_lower for term in key_terms):
+                    relevant.append(b)
+                    seen_ids.add(b.id)
+        except Exception:
+            pass
+
+        # Sort by confidence, cap at 15
+        relevant.sort(key=lambda b: b.confidence, reverse=True)
+        relevant = relevant[:15]
+
+        if not relevant:
+            return identity_prefix + registry_context + existing_context
+
+        belief_lines = "\n".join(
+            f"[conf={b.confidence:.2f}] {b.statement}" for b in relevant
+        )
+        enriched = (
+            f"{identity_prefix}"
+            f"{registry_context}"
+            f"{existing_context}\n\n"
+            f"--- RELEVANT BELIEFS FROM BRAIN (use these, do NOT use placeholders) ---\n"
+            f"{belief_lines}\n"
+            f"--- END BELIEFS ---\n"
+            f"CRITICAL: Use REAL email addresses and names from the beliefs above. "
+            f"Do NOT use recipient@example.com or placeholder names. "
+            f"Do NOT use phrases like 'I hope this finds you well' or 'explore synergies'. "
+            f"Be direct and include experiment data."
+        )
+        return enriched
 
     async def plan_action(
         self,
@@ -120,7 +244,7 @@ class ActionEngine:
         skill_name = best["name"]
         skill = self.registry.get(skill_name)
 
-        # Step 2: Generate parameters
+        # Step 2: Generate parameters — enrich context with relevant beliefs
         params: dict = {}
         if self.internal_llm is not None and hasattr(self.internal_llm, "plan_action_params"):
             try:
@@ -129,8 +253,11 @@ class ActionEngine:
                     "description": skill.description if skill else "",
                     "param_schema": skill.param_schema if skill else {},
                 }
+                enriched_context = self._enrich_belief_context(
+                    skill_name, intent, belief_context,
+                )
                 params = await self.internal_llm.plan_action_params(
-                    intent, skill_info, belief_context,
+                    intent, skill_info, enriched_context,
                 )
             except Exception as e:
                 log.warning("LLM param generation failed: %s", e)
@@ -223,7 +350,10 @@ class ActionEngine:
                 '"params_hint": "参数提示，下一步会细化"}\n'
                 "如果任务只需要一步，也输出数组（只含一项）。\n"
                 "如果某步需要LLM生成内容（如写代码、写文档），用file_write或document工具，"
-                "并在description里说明要生成什么内容。",
+                "并在description里说明要生成什么内容。\n"
+                "重要：如果现有工具不能解决问题，你可以用 tool_forge 创建新的Python工具。"
+                "tool_forge还可以用pip安装Python库、搜索GitHub找开源工具。"
+                "以 forged: 开头的工具是之前创建的自定义工具，可以直接使用。",
                 f"用户意图：{intent}\n\n可用工具：\n{skill_list}\n\n"
                 f"上下文：{belief_context[:500] if belief_context else '无'}",
                 temperature=0.1,
@@ -305,13 +435,16 @@ class ActionEngine:
                         "description": skill.description if skill else "",
                         "param_schema": skill.param_schema if skill else {},
                     }
+                    enriched = self._enrich_belief_context(
+                        skill_name, intent, accumulated_context[-2000:],
+                    )
                     param_prompt = (
                         f"当前步骤：{description}\n"
-                        f"之前步骤的输出：\n{accumulated_context[-2000:]}\n"
+                        f"之前步骤的输出：\n{enriched}\n"
                         f"原始意图：{intent}"
                     )
                     params = await self.internal_llm.plan_action_params(
-                        param_prompt, skill_info, accumulated_context[-1000:],
+                        param_prompt, skill_info, enriched[-1000:],
                     )
                 except Exception as e:
                     log.warning("Param generation failed for step %d: %s", i + 1, e)
@@ -398,7 +531,7 @@ class ActionEngine:
         derived from the original intent.  Also detects repeated patterns
         to store as PREFERENCE beliefs.
         """
-        from ..types import Belief, BeliefCategory, BeliefSource
+        from ..dtypes import Belief, BeliefCategory, BeliefSource
 
         # Create a synthetic target belief from the intent
         dummy_belief = Belief(
@@ -465,7 +598,7 @@ class ActionEngine:
     ) -> None:
         """If the same skill has been called 3+ times successfully,
         extract common patterns and store as PREFERENCE beliefs."""
-        from ..types import Belief, BeliefCategory, BeliefSource
+        from ..dtypes import Belief, BeliefCategory, BeliefSource
 
         # Count successful calls per skill from usage log
         skill_counts: dict[str, int] = {}

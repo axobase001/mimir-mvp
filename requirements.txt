@@ -8,3 +8,4 @@ cryptography>=42.0.0
 aiosmtplib>=3.0.0
 pandas>=2.0.0
 icalendar>=5.0.0
+dnspython>=2.4.0

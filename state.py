@@ -4,7 +4,7 @@ from pathlib import Path
 from .brain.belief_graph import BeliefGraph
 from .brain.sec_matrix import SECMatrix
 from .brain.memory import Memory
-from .types import Goal, GoalOrigin, GoalStatus
+from .dtypes import Goal, GoalOrigin, GoalStatus
 from .config import MimirConfig
 
 

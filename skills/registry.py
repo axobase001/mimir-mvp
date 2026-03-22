@@ -11,12 +11,16 @@ from .base import Skill, SkillResult
 log = logging.getLogger(__name__)
 
 
+_SANDBOX_BLOCKED_SKILLS: set[str] = {"shell_exec", "code_exec"}
+
+
 class SmartSkillRegistry:
     """Enhanced registry with intelligent skill selection."""
 
-    def __init__(self) -> None:
+    def __init__(self, sandbox: bool = False) -> None:
         self._skills: dict[str, Skill] = {}
         self._usage_log: list[dict] = []
+        self._sandbox = sandbox
 
     # ── Registration ──
 
@@ -222,6 +226,15 @@ class SmartSkillRegistry:
             log.warning(
                 "Executing DANGEROUS skill '%s' with params: %s",
                 skill_name, params,
+            )
+
+        # Sandbox: block shell_exec and code_exec on local (non-Docker) environments
+        if self._sandbox and skill_name in _SANDBOX_BLOCKED_SKILLS:
+            log.warning("SANDBOX: blocked '%s' — not allowed on local machine", skill_name)
+            return SkillResult(
+                success=False,
+                error=f"Skill '{skill_name}' is disabled in sandbox mode for safety.",
+                summary=f"Blocked by sandbox: {skill_name}",
             )
 
         start = time.time()

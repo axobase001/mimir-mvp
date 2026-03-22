@@ -16,6 +16,16 @@ mimir_state.json
 # Secrets
 .env
 config.json
+config.docker.json
+
+# Large files / media
+*.mp4
+*.log
+skuld.log
+
+# Temp / duplicates
+fc55ab57-*
+*副本*
 
 # IDE
 .vscode/

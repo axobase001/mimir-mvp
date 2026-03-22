@@ -1,0 +1,18 @@
+{
+  "persona": "ai_founder",
+  "llm_api_key": "",
+  "llm_base_url": "https://api.deepseek.com",
+  "llm_model": "deepseek-chat",
+  "searxng_url": "http://beta-searxng:8080/search",
+  "cycle_interval_seconds": 300,
+  "scheduler_interval": 300,
+  "confidence_decay_rate": 0.02,
+  "sandbox": true,
+  "seed_beliefs": [
+    {"statement": "The AI industry is growing rapidly with new startups launching daily", "tags": ["ai", "market", "growth"], "confidence": 0.85},
+    {"statement": "Product-market fit is the most critical challenge for early-stage startups", "tags": ["startup", "strategy", "pmf"], "confidence": 0.9},
+    {"statement": "Competitor monitoring is essential for strategic positioning", "tags": ["competition", "strategy", "intelligence"], "confidence": 0.8},
+    {"statement": "Investor communication requires clear metrics and progress updates", "tags": ["fundraising", "communication", "metrics"], "confidence": 0.75},
+    {"statement": "AI regulation is increasing globally and may impact business models", "tags": ["regulation", "risk", "policy"], "confidence": 0.7}
+  ]
+}

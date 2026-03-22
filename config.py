@@ -35,7 +35,8 @@ class MimirConfig:
     llm_temperature: float = 0.3
 
     # Search
-    brave_api_key: str = ""
+    searxng_url: str = "http://localhost:8080/search"
+    brave_api_key: str = ""  # legacy, unused
     search_budget_per_cycle: int = 3
 
     # Cycle
@@ -57,6 +58,13 @@ class MimirConfig:
     free_beliefs_limit: int = 500
     pro_cycles_per_day: int = 20
     pro_beliefs_limit: int = -1
+
+    # Safety
+    sandbox: bool = False  # block shell_exec/code_exec on local machines
+
+    # Beta persona
+    persona: str = ""  # "crypto_trader", "ai_founder", "ai_phd", or "" for default
+    etherscan_api_key: str = ""
 
     # Scheduler
     scheduler_interval: float = 60.0
@@ -97,3 +105,29 @@ class MimirConfig:
         "action": 0.5,
         "interaction": 0.3,
     })
+
+    # Email notifications
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_user: str = ""
+    smtp_pass: str = ""
+    notification_email: str = ""
+    daily_digest_enabled: bool = False
+    weekly_digest_enabled: bool = False
+    realtime_alerts_enabled: bool = True
+    digest_hour: int = 8
+
+    # IMAP (inbox reading — Gmail)
+    imap_host: str = ""
+    imap_port: int = 993
+    imap_user: str = ""
+    imap_pass: str = ""
+
+    # Outreach rate limits
+    outreach_per_cycle: int = 1            # max 1 email per cycle (~5-10min)
+    outreach_per_domain_per_day: int = 2   # same domain max 2/day
+    followup_hours: float = 72.0
+
+    # Sibling communication
+    sibling_name: str = "local"            # this instance's name
+    sibling_url: str = ""                  # URL of sibling's mailbox API

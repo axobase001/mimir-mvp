@@ -1,0 +1,82 @@
+services:
+  beta-searxng:
+    image: searxng/searxng:latest
+    container_name: beta-searxng
+    restart: unless-stopped
+
+  skuld-crypto:
+    build: .
+    container_name: skuld-beta-crypto
+    ports:
+      - "8010:8000"
+    environment:
+      - JWT_SECRET=skuld-beta-crypto-secret
+      - LLM_API_KEY=${LLM_API_KEY}
+    volumes:
+      - crypto-data:/srv/data
+      - ./configs/config.beta.crypto_trader.json:/srv/mimir/config.json:ro
+    depends_on:
+      - beta-searxng
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/dashboard')"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  skuld-founder:
+    build: .
+    container_name: skuld-beta-founder
+    ports:
+      - "8011:8000"
+    environment:
+      - JWT_SECRET=skuld-beta-founder-secret
+      - LLM_API_KEY=${LLM_API_KEY}
+    volumes:
+      - founder-data:/srv/data
+      - ./configs/config.beta.ai_founder.json:/srv/mimir/config.json:ro
+    depends_on:
+      - beta-searxng
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/dashboard')"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  skuld-phd:
+    build: .
+    container_name: skuld-beta-phd
+    ports:
+      - "8012:8000"
+    environment:
+      - JWT_SECRET=skuld-beta-phd-secret
+      - LLM_API_KEY=${LLM_API_KEY}
+    volumes:
+      - phd-data:/srv/data
+      - ./configs/config.beta.ai_phd.json:/srv/mimir/config.json:ro
+    depends_on:
+      - beta-searxng
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/dashboard')"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  crypto-data:
+  founder-data:
+  phd-data:

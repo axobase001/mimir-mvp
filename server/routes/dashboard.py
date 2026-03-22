@@ -1,6 +1,22 @@
 from fastapi import APIRouter, Request, HTTPException
+from pydantic import BaseModel
+from typing import Optional
 
 router = APIRouter()
+
+
+class EmailSettingsPayload(BaseModel):
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_user: str = ""
+    smtp_pass: str = ""
+    from_addr: str = ""
+    to_addr: str = ""
+    daily_digest: bool = True
+    weekly_digest: bool = True
+    realtime_alerts: bool = True
+    digest_hour: int = 8
+    send_test: bool = False
 
 
 def _get_user_brain(request: Request):
@@ -228,3 +244,90 @@ async def get_learning_curve(request: Request):
         "sec_cluster_count": len(sec.entries),
         "pe_trend": pe_trend[-50:],  # Last 50 cycles
     }
+
+
+@router.get("/api/email_settings")
+async def get_email_settings(request: Request):
+    """Return current email notification settings."""
+    user_id, engine, state = _get_user_brain(request)
+    notifier = state.get("email_notifier")
+    if notifier is None:
+        return {
+            "configured": False,
+            "smtp_host": "",
+            "smtp_port": 587,
+            "smtp_user": "",
+            "from_addr": "",
+            "to_addr": "",
+            "daily_digest": False,
+            "weekly_digest": False,
+            "realtime_alerts": True,
+            "digest_hour": 8,
+        }
+    cfg = notifier.config
+    return {
+        "configured": cfg.enabled,
+        "smtp_host": cfg.smtp_host,
+        "smtp_port": cfg.smtp_port,
+        "smtp_user": cfg.smtp_user,
+        "from_addr": cfg.from_addr,
+        "to_addr": cfg.to_addr,
+        "daily_digest": cfg.daily_digest,
+        "weekly_digest": cfg.weekly_digest,
+        "realtime_alerts": cfg.realtime_alerts,
+        "digest_hour": cfg.digest_hour,
+    }
+
+
+@router.post("/api/email_settings")
+async def update_email_settings(request: Request, payload: EmailSettingsPayload):
+    """Update email notification settings and optionally send a test email."""
+    from ...core.email_notifier import EmailNotifier, EmailConfig
+
+    user_id, engine, state = _get_user_brain(request)
+
+    email_config = EmailConfig(
+        smtp_host=payload.smtp_host,
+        smtp_port=payload.smtp_port,
+        smtp_user=payload.smtp_user,
+        smtp_pass=payload.smtp_pass,
+        from_addr=payload.from_addr or payload.smtp_user,
+        to_addr=payload.to_addr,
+        enabled=bool(payload.smtp_host and payload.smtp_user),
+        daily_digest=payload.daily_digest,
+        weekly_digest=payload.weekly_digest,
+        realtime_alerts=payload.realtime_alerts,
+        digest_hour=payload.digest_hour,
+    )
+
+    notifier = EmailNotifier(email_config)
+    state["email_notifier"] = notifier
+    engine.email_notifier = notifier
+
+    result = {"saved": True, "test_sent": False, "test_error": None}
+
+    # Send test email if requested
+    if payload.send_test and email_config.enabled:
+        subject = "[Skuld] 测试邮件 — 通知系统已配置"
+        html = """
+        <div style="font-family:'Source Sans 3',-apple-system,sans-serif;max-width:600px;margin:0 auto;color:#1A1A1F;line-height:1.6;">
+            <div style="padding:20px 0;border-bottom:1px solid rgba(0,0,0,0.06);">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5DCAA5;letter-spacing:3px;text-transform:uppercase;">SKULD 测试邮件</span>
+            </div>
+            <div style="padding:20px 0;">
+                <p>Email通知系统已成功配置。你将在以下情况收到通知：</p>
+                <ul>
+                    <li>每日/每周总结</li>
+                    <li>Brain产生新推理</li>
+                    <li>目标完成或放弃</li>
+                    <li>重大预测误差</li>
+                </ul>
+            </div>
+        </div>
+        """
+        success = await notifier.send_email_async(subject, html)
+        result["test_sent"] = success
+        if not success:
+            result["test_error"] = "发送失败，请检查SMTP配置"
+
+    return result

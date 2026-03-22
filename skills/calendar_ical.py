@@ -88,7 +88,8 @@ def _build_vevent(
     )
     if description:
         # Escape newlines for iCal
-        vevent += f"DESCRIPTION:{description.replace(chr(10), '\\n')}\r\n"
+        escaped_desc = description.replace(chr(10), '\\n')
+        vevent += f"DESCRIPTION:{escaped_desc}\r\n"
     vevent += "END:VEVENT\r\n"
     return vevent
 

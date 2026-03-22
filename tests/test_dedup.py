@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 from mimir.core.dedup import BeliefDeduplicator
 from mimir.brain.belief_graph import BeliefGraph
 from mimir.llm.client import LLMClient
-from mimir.types import Belief, BeliefSource
+from mimir.dtypes import Belief, BeliefSource
 from mimir.config import MimirConfig
 
 
