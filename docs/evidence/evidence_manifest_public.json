@@ -1,0 +1,90 @@
+{
+  "generated_at": "2026-05-01 13:33:25",
+  "source_policy": "Generated from audit_output and public-safe numeric artifacts only. Raw state/log/conversation/proprietary files are not copied.",
+  "included_files": [
+    {
+      "path": "README_LONG_RUN_EVIDENCE.md",
+      "type": "public summary",
+      "source": "audit_output + numeric public-safe artifacts"
+    },
+    {
+      "path": "cycle_metrics_public.csv",
+      "type": "canonical public metrics",
+      "source": "audit_output/cycle_metrics.json + selected public-safe artifact summaries"
+    },
+    {
+      "path": "cycle_metrics_public.json",
+      "type": "canonical public metrics",
+      "source": "audit_output/cycle_metrics.json + selected public-safe artifact summaries"
+    },
+    {
+      "path": "sec_statistics_public.json",
+      "type": "public numeric SEC summary",
+      "source": "paper_data/reviewer_response/sec_statistics.json"
+    },
+    {
+      "path": "first_breath_cost_public.json",
+      "type": "public numeric token/cost summary",
+      "source": "paper_data/reviewer_response/cost_verification.json"
+    },
+    {
+      "path": "evidence_manifest_public.json",
+      "type": "public manifest",
+      "source": "generated"
+    },
+    {
+      "path": "REDACTION_CERTIFICATE.md",
+      "type": "redaction certificate",
+      "source": "redact_secrets.py scan"
+    }
+  ],
+  "excluded_files_or_classes": [
+    "raw state.json files",
+    "data/users.db",
+    "conversation store files",
+    "skuld.log",
+    "raw LLM responses",
+    "contacts, emails, private prompts",
+    "API keys or private configs",
+    "brain/sec_matrix.py",
+    "brain/belief_graph.py"
+  ],
+  "claim_source_map": [
+    {
+      "claim": "Current Aldebaran local state snapshot reports 3,542 cycles.",
+      "source_file": "data/brains/b4cd7a4c-8bde-4551-afd5-b336ad191ce1/state.json",
+      "confidence": "high",
+      "caveat": "Only top-level cycle_count is exported; raw state is not copied."
+    },
+    {
+      "claim": "Earlier dual-instance summary records 2,167 cycles and 225 beliefs for Aldebaran.",
+      "source_file": "paper_data/dual_instance_evidence.json",
+      "confidence": "high",
+      "caveat": "Do not combine with the 3,542-cycle snapshot as if from the same source."
+    },
+    {
+      "claim": "Antares dev/beta instance records exist.",
+      "source_file": "paper_data/dual_instance_evidence.json; paper_data/antares_state_*.json",
+      "confidence": "high",
+      "caveat": "Public export includes summary counts only."
+    },
+    {
+      "claim": "Early learning curves show belief and SEC cluster evolution.",
+      "source_file": "mimir_learning_curve.csv; skuld_first_breath/cycle_history.csv",
+      "confidence": "high",
+      "caveat": "Early-run trends, not benchmark results."
+    },
+    {
+      "claim": "One SEC analysis artifact shows positive/negative C-value differentiation and association with belief formation.",
+      "source_file": "paper_data/reviewer_response/sec_statistics.json",
+      "confidence": "high",
+      "caveat": "Single local analysis artifact."
+    },
+    {
+      "claim": "One cost artifact records 354 LLM calls and 143,075 tokens.",
+      "source_file": "paper_data/reviewer_response/cost_verification.json",
+      "confidence": "medium",
+      "caveat": "Single audited run; not a universal cost estimate."
+    }
+  ]
+}

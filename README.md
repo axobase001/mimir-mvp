@@ -12,7 +12,7 @@
 
 ---
 
-**241 tests** · **30+ skills** · **Two live instances (957 & 314 cycles)** · **Token cost ↓50% with use**
+**241 tests** · **30+ skills** · **Aldebaran snapshot: 3,542 cycles** · **Public-safe evidence package**
 
 [Paper](https://arxiv.org/abs/2603.09476) · NeurIPS 2026 Submitted · ALIFE 2026 Accepted
 
@@ -68,7 +68,32 @@ Skuld is a cognitive engine where **the Brain owns state and the LLM is a tool**
 └──────────────────────────────────────────────────────────────┘
 ```
 
-Swap the LLM. The Brain survives. We tested it: **belief survival rate 100%, SEC correlation 1.0, procedural memory 100% preserved.**
+The LLM is replaceable. The Brain persists. The public evidence package supports the narrower claim: Skuld has durable local state and long-run instance history. It does not turn model replacement into a verified public-evidence claim.
+
+## The Brain Has a History
+
+Skuld is no longer just an architecture diagram. It has a local running history.
+
+A current Aldebaran state snapshot reports **3,542 cognitive cycles**. An earlier independent dual-instance summary records Aldebaran at **2,167 cycles**, with **225 beliefs** and **15 procedures**. Additional public-safe instance records exist for Antares dev and Antares beta, with **984** and **458** cycles respectively.
+
+Those numbers are deliberately separated. The **3,542 cycles** come from the current Aldebaran state snapshot's top-level `cycle_count`. The **225 beliefs** come from the earlier dual-instance summary. They should not be merged into a single synthetic claim.
+
+Public-safe artifacts also show early belief and SEC cluster evolution, sparse positive/negative C-value differentiation associated with belief formation, and one audited first-breath run with **354 LLM calls** and **143,075 tokens**.
+
+These numbers do not claim AGI. They do not claim consciousness. They do not claim that a model became alive.
+
+They support a narrower and harder claim: Skuld has operated as a long-horizon persistent cognitive substrate, with durable state, multiple instance traces, belief/SEC evolution artifacts, and measurable internal attention differentiation.
+
+The LLM can be replaced.  
+The Brain has a history.
+
+Evidence:
+
+- [Long-run evidence summary](docs/evidence/README_LONG_RUN_EVIDENCE.md)
+- [Public cycle metrics](docs/evidence/cycle_metrics_public.json)
+- [SEC differentiation artifact](docs/evidence/sec_statistics_public.json)
+- [First-breath token/cost artifact](docs/evidence/first_breath_cost_public.json)
+- [Redaction certificate](docs/evidence/REDACTION_CERTIFICATE.md)
 
 ## Live Dashboard
 
@@ -82,7 +107,7 @@ Swap the LLM. The Brain survives. We tested it: **belief survival rate 100%, SEC
 
 We don't have pitch slides. We have numbers.
 
-### Learning Curve — Same Task × 10
+### Archived Learning-Curve Artifact — Same Task × 10
 
 | | Iteration 1 | Iteration 10 | Change |
 |---|---|---|---|
@@ -90,9 +115,7 @@ We don't have pitch slides. We have numbers.
 | **LLM calls** | 9 | 4 | **↓ 55.6%** |
 | **Quality score** | 0.95 | 0.95 | **Unchanged** |
 
-The inflection point is iteration 3→4. After three executions, the belief graph accumulates enough knowledge to skip search entirely. The system answers from what it already knows.
-
-**No competitor has published comparable data.** We checked: Mem0 ($24M raised), Cognee (€7.5M), Personal.ai, Lindy.ai, Kin — none have measurable learning curves.
+The archived local artifact reports an inflection around iteration 3→4, where fewer external calls were needed for the same task. This is useful evidence, but it is not presented as a universal token-reduction law. It belongs in the replay queue, not in a victory lap.
 
 ### 33-Cycle Life Test
 
@@ -120,22 +143,20 @@ Skuld's response:
 - Generated a self-improvement plan **without being asked**
 - Self-critiqued: *"focusing on format over persuasion was the fatal flaw"*
 
-This is the first recorded instance of a live cognitive system autonomously forming meta-cognitive beliefs from natural language feedback.
+This is one local recorded instance of the system forming meta-cognitive procedure beliefs from natural language feedback.
 
-### Live Instances (as of 2026-03-22)
+### Public-Safe Instance Records
 
-Two Skuld instances have been running continuously:
+The public evidence package now separates raw private state from public-safe counts:
 
-| | Aldebaran | Antares |
-|---|---|---|
-| **Location** | Local Docker | Alibaba Cloud (Singapore) |
-| **Cycles** | 957 | 314 |
-| **Beliefs** | Rebuilding (decay event recovery) | 209 (healthy growth) |
-| **SEC clusters** | 3,590 | 1,800+ |
-| **Persona template** | Yes (epistemic constitution) | No (control experiment) |
-| **Current focus** | Focused search strategies | Biblical figure research (Daniel) |
+| Instance record | Public-safe cycle evidence | Public-safe belief/procedure evidence | Source |
+|---|---:|---:|---|
+| Aldebaran current local snapshot | 3,542 | Not exported from this snapshot | `cycle_count` only |
+| Aldebaran earlier summary | 2,167 | 225 beliefs, 15 procedures | dual-instance summary |
+| Antares dev | 984 | 214 beliefs, 14 procedures | dual-instance summary |
+| Antares beta | 458 | 188 beliefs, 24 procedures | dual-instance summary |
 
-Two instances, same codebase, different configurations — one with an epistemic constitution template, one without. Running as a live ablation study.
+The important part is not the trophy number. It is continuity: multiple traces, durable state, and enough history to audit.
 
 ### Interaction Demo — Skuld x Shenwan
 
@@ -181,10 +202,14 @@ The Brain learns where to look. No reward function. No RLHF. No human labels. At
 | Multi-step orchestrator | **Open** | LLM decomposes complex tasks into skill chains |
 | Dashboard | **Open** | D3.js belief graph + Chart.js SEC matrix + real-time WebSocket |
 | Multi-user + Auth | **Open** | JWT, per-user Brain isolation, usage limits, Docker |
+| Public-safe evidence | **Open** | Redacted long-run evidence under `docs/evidence/` |
+| Interface stubs | **Open** | Public interfaces around private cognitive mechanisms |
 | **SEC matrix** | **Proprietary** | The attention allocation mechanism. Interface stubs provided. |
 | **Belief graph** | **Proprietary** | Bayesian confidence updates + dependency propagation. Interface stubs provided. |
+| Raw state snapshots | **Not open** | Local `state.json` files remain private |
+| Private archives | **Not open** | Conversation archives, user DB, private prompts, contacts, outreach data |
 
-The engineering is open. The science is the moat.
+The engineering surface is open. The raw private state is not. The science is the moat.
 
 ## Quick Start
 
@@ -237,7 +262,7 @@ docker-compose up -d
 
 Skuld是一个认知引擎。**Brain拥有状态，LLM是工具。**
 
-换LLM，Brain的积累不丢。我们测了：信念存活率100%，SEC相关性1.0，程序记忆100%保留。
+换LLM，Brain会保留历史。本次公开证据只支持一个更窄的结论：Skuld存在可审计的长期本地状态和多实例运行痕迹；不把LLM切换存活作为已验证结论。
 
 ## 实时 Dashboard
 
@@ -249,7 +274,7 @@ Skuld是一个认知引擎。**Brain拥有状态，LLM是工具。**
 
 ## 数据
 
-### 学习曲线——同任务×10
+### 归档学习曲线——同任务×10
 
 | | 第1次 | 第10次 | 变化 |
 |---|---|---|---|
@@ -257,9 +282,7 @@ Skuld是一个认知引擎。**Brain拥有状态，LLM是工具。**
 | **LLM调用** | 9 | 4 | **↓ 55.6%** |
 | **质量评分** | 0.95 | 0.95 | **不变** |
 
-拐点在第3→4次。3次执行后信念图积累了足够的知识，直接跳过搜索，从已知中回答。
-
-**没有任何竞品发布过类似数据。** 我们查了：Mem0（融了$24M）、Cognee（€7.5M）、Personal.ai、Lindy.ai、Kin——全都没有可度量的学习曲线。
+归档的本地实验记录显示，第3→4次附近外部调用开始下降。这个结果可以作为复现实验的线索，但不写成通用的token下降规律，也不把它当成未经复核的竞品比较结论。
 
 ### 33周期生命周期测试
 
@@ -267,7 +290,7 @@ Skuld是一个认知引擎。**Brain拥有状态，LLM是工具。**
 
 没有人告诉它做这些。
 
-### 第一次自主学习事件
+### 一次自主学习事件记录
 
 Cycle 64，用户发送了非指令性反馈。消息明确说"这不是指令"。
 
@@ -278,21 +301,20 @@ Skuld的反应：
 - **在没有被要求的情况下**生成了自我改进计划
 - 自我批评：*"侧重格式而非说服力是致命伤"*
 
-这是产品历史上第一次记录到：一个活的认知系统从自然语言反馈中自主形成元认知信念。
+这是一次本地记录：系统从自然语言反馈中形成元认知类程序信念。
 
-### 活实例（截至 2026-03-22）
+### 公开安全实例记录
 
-两个 Skuld 实例持续运行中：
+公开证据包将原始私有状态与可公开的统计数字分开：
 
-| | Aldebaran（老大） | Antares（老二） |
-|---|---|---|
-| **位置** | 本地 Docker | 阿里云（新加坡） |
-| **Cycle** | 957 | 314 |
-| **信念** | 重建中（衰减事故恢复） | 209（健康增长） |
-| **SEC clusters** | 3,590 | 1,800+ |
-| **拟人模板** | 有（认知宪法） | 无（对照实验） |
+| 实例记录 | 可公开 cycle 证据 | 可公开信念/程序证据 | 来源 |
+|---|---:|---:|---|
+| Aldebaran 当前本地快照 | 3,542 | 不从该快照导出 | top-level `cycle_count` |
+| Aldebaran 较早摘要 | 2,167 | 225 信念，15 程序 | dual-instance summary |
+| Antares dev | 984 | 214 信念，14 程序 | dual-instance summary |
+| Antares beta | 458 | 188 信念，24 程序 | dual-instance summary |
 
-两个实例，同一代码，不同配置——一个有认知宪法模板，一个没有。活的消融实验。
+重点不是奖杯数字。重点是连续性：多条痕迹，持久状态，以及足以审计的历史。
 
 ### 交互 Demo — Skuld x 沈晚
 

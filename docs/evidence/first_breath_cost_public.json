@@ -1,0 +1,10 @@
+{
+  "generated_at": "2026-05-01 13:33:25",
+  "source_file": "paper_data/reviewer_response/cost_verification.json",
+  "confidence": "medium",
+  "caveat": "Single audited first-breath run. This file should be used for token/cost planning only, not as a universal estimate.",
+  "total_llm_calls": 354,
+  "total_tokens": 143075,
+  "reported_cost_usd": 0.064978,
+  "model": null
+}
