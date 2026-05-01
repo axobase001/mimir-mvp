@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-05-01 13:33:25",
+  "source_file": "paper_data/reviewer_response/sec_statistics.json",
+  "confidence": "high",
+  "caveat": "One local SEC analysis artifact. This supports a conservative claim of observed differentiation in one analysis, not a standardized benchmark result.",
+  "pi_value_distribution": {
+    "min": -0.141605,
+    "max": 0.06398,
+    "mean": -0.001872,
+    "std": 0.023077,
+    "n_positive": 12,
+    "n_negative": 11,
+    "n_zero": 244
+  },
+  "belief_formation_correlation": {
+    "formed_count": 136,
+    "not_formed_count": 131,
+    "cohens_d": 0.3803,
+    "mann_whitney_p": 4e-05,
+    "random_baseline_p_value": 0.0
+  }
+}

@@ -1,0 +1,8 @@
+instance,metric_type,cycle_count,belief_count,sec_cluster_count,procedure_count,token_usage,llm_calls,estimated_cost_usd,source_file,confidence,caveat
+Aldebaran current local state snapshot,top_level_state_cycle_count_only,3542,,,,,,,data/brains/b4cd7a4c-8bde-4551-afd5-b336ad191ce1/state.json,high,"Only the top-level cycle_count is exported. Recursive JSON counters from this state file are structural counters, not canonical cognitive metrics, and are intentionally omitted."
+Aldebaran earlier summary,dual_instance_summary,2167,225,,15,,,,paper_data/dual_instance_evidence.json,high,"Earlier summary record. Do not combine its belief_count with the later 3,542-cycle state snapshot as if they came from the same source."
+Antares dev,dual_instance_summary,984,214,,14,,,,paper_data/dual_instance_evidence.json; paper_data/antares_state_84215e09.json,high,Public claim should stay at instance-existence and summary-count level unless a redacted replay is prepared.
+Antares beta,dual_instance_summary,458,188,,24,,,,paper_data/dual_instance_evidence.json; paper_data/antares_state_5bdfffec.json,high,Public claim should stay at instance-existence and summary-count level unless a redacted replay is prepared.
+Mimir early learning curve,learning_curve_csv,34,30,147,,,,,mimir_learning_curve.csv,high,"Early 34-cycle metrics series; useful for trend evidence, not a long-run maximum."
+Skuld first-breath run,learning_curve_csv,35,39,171,,,,,skuld_first_breath/cycle_history.csv,high,First-breath run metrics; not a standardized benchmark.
+Skuld first-breath token/cost audit,cost_verification,,,,,143075,354,0.064978,paper_data/reviewer_response/cost_verification.json,medium,"Single audited run. This is cost-planning evidence, not a general cost guarantee."
